@@ -5,7 +5,7 @@ namespace iis.Data
 {
     public class SqliteIISDbContext : iisContext
     {
-        private readonly string _connectionString = "connectionString";
+        private readonly string _connectionString = "iisContext";
         private readonly SqliteConnection _inMemory = null;
 
         public SqliteIISDbContext()

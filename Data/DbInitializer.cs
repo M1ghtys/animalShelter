@@ -30,5 +30,37 @@ namespace iis.Data
 
             _dbContext.SaveChanges();
         }
+
+        public void SeedVolunteers()
+        {
+            if (_dbContext.Volunteer.Any())
+            {
+                return;
+            }
+
+            var diagnosis = VolunteersList.GetVolunteers();
+            foreach (var m in diagnosis)
+            {
+                _dbContext.Volunteer.Add(m);
+            }
+
+            _dbContext.SaveChanges();
+        }
+
+        public void SeedWalks()
+        {
+            if (_dbContext.Walk.Any())
+            {
+                return;
+            }
+
+            var diagnosis = WalksList.GetWalks();
+            foreach (var m in diagnosis)
+            {
+                _dbContext.Walk.Add(m);
+            }
+
+            _dbContext.SaveChanges();
+        }
     }
 }

@@ -9,32 +9,32 @@ using iis.Data;
 using iis.Models;
 using iis.Facades;
 
-namespace iis.Pages.Animals
+namespace iis.Pages.Volunteers
 {
     public class DeleteModel : PageModel
     {
         private readonly iis.Data.iisContext _context;
-        private readonly AnimalFacade _facade;
+        private readonly VolunteerFacade _facade;
 
         public DeleteModel(iis.Data.iisContext context)
         {
             _context = context;
-            _facade = new AnimalFacade(context);
+            _facade = new VolunteerFacade(context);
         }
 
         [BindProperty]
-        public Animal Animal { get; set; }
+        public Volunteer Volunteer { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || !_facade.AnimalExists(id))
+            if (id == null || !_facade.VolunteerExists(id))
             {
                 return NotFound();
             }
 
-            Animal = await _context.Animal.FirstOrDefaultAsync(m => m.Id == id);
+            Volunteer = await _context.Volunteer.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Animal == null)
+            if (Volunteer == null)
             {
                 return NotFound();
             }
@@ -43,16 +43,16 @@ namespace iis.Pages.Animals
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || !_facade.AnimalExists(id))
+            if (id == null || !_facade.VolunteerExists(id))
             {
                 return NotFound();
             }
 
-            Animal = await _context.Animal.FindAsync(id);
+            Volunteer = await _context.Volunteer.FindAsync(id);
 
-            if (Animal != null)
+            if (Volunteer != null)
             {
-                _context.Animal.Remove(Animal);
+                _context.Volunteer.Remove(Volunteer);
                 await _context.SaveChangesAsync();
             }
 

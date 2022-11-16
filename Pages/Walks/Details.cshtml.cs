@@ -9,31 +9,31 @@ using iis.Data;
 using iis.Models;
 using iis.Facades;
 
-namespace iis.Pages.Animals
+namespace iis.Pages.Walks
 {
     public class DetailsModel : PageModel
     {
         private readonly iis.Data.iisContext _context;
-        private readonly AnimalFacade _facade;
+        private readonly WalkFacade _facade;
 
         public DetailsModel(iis.Data.iisContext context)
         {
             _context = context;
-            _facade = new AnimalFacade(context);
+            _facade = new WalkFacade(context);
         }
 
-        public Animal Animal { get; set; }
+        public Walk Walk { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || !_facade.AnimalExists(id))
+            if (id == null || !_facade.WalkExists(id))
             {
                 return NotFound();
             }
 
-            Animal = await _context.Animal.FirstOrDefaultAsync(m => m.Id == id);
+            Walk = await _context.Walk.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Animal == null)
+            if (Walk == null)
             {
                 return NotFound();
             }

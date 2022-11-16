@@ -10,32 +10,32 @@ using iis.Data;
 using iis.Models;
 using iis.Facades;
 
-namespace iis.Pages.Animals
+namespace iis.Pages.Volunteers
 {
     public class EditModel : PageModel
     {
         private readonly iis.Data.iisContext _context;
-        private readonly AnimalFacade _facade;
+        private readonly VolunteerFacade _facade;
 
         public EditModel(iis.Data.iisContext context)
         {
             _context = context;
-            _facade = new AnimalFacade(context);
+            _facade = new VolunteerFacade(context);
         }
 
         [BindProperty]
-        public Animal Animal { get; set; }
+        public Volunteer Volunteer { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || !_facade.AnimalExists(id))
+            if (id == null || !_facade.VolunteerExists(id))
             {
                 return NotFound();
             }
 
-            Animal = await _context.Animal.FirstOrDefaultAsync(m => m.Id == id);
+            Volunteer = await _context.Volunteer.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Animal == null)
+            if (Volunteer == null)
             {
                 return NotFound();
             }
@@ -51,7 +51,7 @@ namespace iis.Pages.Animals
                 return Page();
             }
 
-            _context.Attach(Animal).State = EntityState.Modified;
+            _context.Attach(Volunteer).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace iis.Pages.Animals
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_facade.AnimalExists(Animal.Id))
+                if (!_facade.VolunteerExists(Volunteer.Id))
                 {
                     return NotFound();
                 }

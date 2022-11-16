@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using iis.Data;
 
 namespace iis.Migrations.SqliteIISDb
 {
     [DbContext(typeof(SqliteIISDbContext))]
-    partial class SqliteIISDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221116192017_AddTableVolunteers")]
+    partial class AddTableVolunteers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,35 +92,6 @@ namespace iis.Migrations.SqliteIISDb
                     b.HasKey("Id");
 
                     b.ToTable("Volunteer");
-                });
-
-            modelBuilder.Entity("iis.Models.Walk", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("AnimalId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("FinishTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("State")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("VolunteerId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Walk");
                 });
 #pragma warning restore 612, 618
         }

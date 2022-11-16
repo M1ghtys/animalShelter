@@ -15,5 +15,7 @@ namespace iis.Data
         }
 
         public DbSet<iis.Models.Animal> Animal { get; set; }
+        public DbSet<iis.Models.Volunteer> Volunteer { get; set; }
+        public DbSet<iis.Models.Walk> Walk { get; set; }
     }
 }

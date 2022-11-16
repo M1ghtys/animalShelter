@@ -1,0 +1,59 @@
+﻿@page
+@model iis.Pages.Walks.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Walk</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Walk.AnimalId" class="control-label"></label>
+                <input asp-for="Walk.AnimalId" class="form-control" />
+                <span asp-validation-for="Volunteer.AnimalId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Walks.VolunteerId" class="control-label"></label>
+                <input asp-for="Walks.VolunteerId" class="form-control" />
+                <span asp-validation-for="Volunteer.VolunteerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Walks.StartTime" class="control-label"></label>
+                <input asp-for="Walks.StartTime" class="form-control" />
+                <span asp-validation-for="Volunteer.StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Walks.FinishTime" class="control-label"></label>
+                <select asp-for="Walks.FinishTime" class="form-control"></select>
+                <span asp-validation-for="Volunteer.FinishTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Walks.State" class="control-label"></label>
+                <input asp-for="Walks.State" class="form-control" />
+                <span asp-validation-for="Walks.State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Walks.Comment" class="control-label"></label>
+                <select asp-for="Walks.Comment" class="form-control"></select>
+                <span asp-validation-for="Walks.Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

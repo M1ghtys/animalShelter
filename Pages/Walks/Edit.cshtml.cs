@@ -7,35 +7,35 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using iis.Data;
-using iis.Models;
 using iis.Facades;
+using iis.Models;
 
-namespace iis.Pages.Animals
+namespace iis.Pages.Walks
 {
     public class EditModel : PageModel
     {
         private readonly iis.Data.iisContext _context;
-        private readonly AnimalFacade _facade;
+        private readonly WalkFacade _facade;
 
         public EditModel(iis.Data.iisContext context)
         {
             _context = context;
-            _facade = new AnimalFacade(context);
+            _facade = new WalkFacade(context);
         }
 
         [BindProperty]
-        public Animal Animal { get; set; }
+        public Walk Walk { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || !_facade.AnimalExists(id))
+            if (id == null || !_facade.WalkExists(id))
             {
                 return NotFound();
             }
 
-            Animal = await _context.Animal.FirstOrDefaultAsync(m => m.Id == id);
+            Walk = await _context.Walk.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Animal == null)
+            if (Walk == null)
             {
                 return NotFound();
             }
@@ -51,7 +51,7 @@ namespace iis.Pages.Animals
                 return Page();
             }
 
-            _context.Attach(Animal).State = EntityState.Modified;
+            _context.Attach(Walk).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace iis.Pages.Animals
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_facade.AnimalExists(Animal.Id))
+                if (!_facade.WalkExists(Walk.Id))
                 {
                     return NotFound();
                 }
