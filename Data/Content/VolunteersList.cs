@@ -14,7 +14,7 @@ namespace iis.Data.Content
         {
             return new List<Volunteer>()
             {
-                new iis.Models.Volunteer
+                new Volunteer
                 {
                     Name = "Eric Green",
                     Address = "Old Town 35",
@@ -23,14 +23,23 @@ namespace iis.Data.Content
                     Verified = true,
                     Comment = "Nice guy"
                 },
-                new iis.Models.Volunteer
+                new Volunteer
                 {
                     Name = "Jenny Blue",
                     Address = "New Town 36",
                     Phone = "+15 654 215",
                     Email = "jennyishere@email.com",
                     Verified = false,
-                    Comment = "Nice girl"
+                    Comment = "Dogs loves her"
+                },
+                new Volunteer
+                {
+                    Name = "John Black",
+                    Address = "Small Town 37",
+                    Phone = "+178 154 754 215",
+                    Email = "johnishere@email.com",
+                    Verified = true,
+                    Comment = "Always late"
                 }
             };
         }

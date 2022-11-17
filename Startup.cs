@@ -94,6 +94,11 @@ namespace iis
 
             dbInitializer.Migrate();
             dbInitializer.SeedAnimals();
+            dbInitializer.SeedEmployees();
+            dbInitializer.SeedHealthConditions();
+            dbInitializer.SeedOccupations();
+            dbInitializer.SeedPhotos();
+            dbInitializer.SeedVeterinaryRecords();
             dbInitializer.SeedVolunteers();
             dbInitializer.SeedWalks();
         }

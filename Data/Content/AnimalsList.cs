@@ -14,35 +14,50 @@ namespace iis.Data.Content
         {
             return new List<Animal>()
             {
-                new iis.Models.Animal
+                new Animal
                 {
                     ChipNumber = "CZ000001",
                     Name = "George",
                     Breed = "Monke",
-                    Gender = iis.Models.Gender.Male,
+                    Gender = Gender.Male,
                     Birth = DateTime.Parse("1984-1-1"),
                     DateOfArrival = DateTime.Parse("1984-1-2"),
-                    Size = iis.Models.Size.L,
+                    Size = Size.L,
                     About = "Big Monke",
                     Reserved = true,
-                    Friendly = iis.Models.Friendly.Animals,
+                    Friendly = Friendly.Animals,
                     ForBeginners = false,
-                    Territory = iis.Models.Territory.Inside,
+                    Territory = Territory.Inside
                 },
-                new iis.Models.Animal
+                new Animal
                 {
                     ChipNumber = "CZ000002",
                     Name = "Pepah",
-                    Breed = "Not Monke",
-                    Gender = iis.Models.Gender.Male,
+                    Breed = "Horse",
+                    Gender = Gender.Male,
                     Birth = DateTime.Parse("1966-1-1"),
                     DateOfArrival = DateTime.Parse("1967-1-2"),
-                    Size = iis.Models.Size.S,
-                    About = "Non-Monke",
+                    Size = Size.S,
+                    About = "Horse",
                     Reserved = false,
-                    Friendly = iis.Models.Friendly.Both,
+                    Friendly = Friendly.Both,
                     ForBeginners = true,
-                    Territory = iis.Models.Territory.Outside,
+                    Territory = Territory.Outside
+                },
+                new Animal
+                {
+                    ChipNumber = "CZ000003",
+                    Name = "Arthur",
+                    Breed = "Dog",
+                    Gender = Gender.Male,
+                    Birth = DateTime.Parse("2016-1-1"),
+                    DateOfArrival = DateTime.Parse("2020-1-2"),
+                    Size = Size.S,
+                    About = "Big Dog",
+                    Reserved = false,
+                    Friendly = Friendly.Both,
+                    ForBeginners = false,
+                    Territory = Territory.Inside
                 }
             };
         }

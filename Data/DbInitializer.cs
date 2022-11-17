@@ -31,6 +31,86 @@ namespace iis.Data
             _dbContext.SaveChanges();
         }
 
+        public void SeedEmployees()
+        {
+            if (_dbContext.Employee.Any())
+            {
+                return;
+            }
+
+            var diagnosis = EmployeesList.GetEmployees();
+            foreach (var m in diagnosis)
+            {
+                _dbContext.Employee.Add(m);
+            }
+
+            _dbContext.SaveChanges();
+        }
+
+        public void SeedHealthConditions()
+        {
+            if (_dbContext.HealthCondition.Any())
+            {
+                return;
+            }
+
+            var diagnosis = HealthConditionsList.GetHealthConditions();
+            foreach (var m in diagnosis)
+            {
+                _dbContext.HealthCondition.Add(m);
+            }
+
+            _dbContext.SaveChanges();
+        }
+
+        public void SeedOccupations()
+        {
+            if (_dbContext.Occupation.Any())
+            {
+                return;
+            }
+
+            var diagnosis = OccupationsList.GetOccupations();
+            foreach (var m in diagnosis)
+            {
+                _dbContext.Occupation.Add(m);
+            }
+
+            _dbContext.SaveChanges();
+        }
+
+        public void SeedPhotos()
+        {
+            if (_dbContext.Photo.Any())
+            {
+                return;
+            }
+
+            var diagnosis = PhotosList.GetPhotos();
+            foreach (var m in diagnosis)
+            {
+                _dbContext.Photo.Add(m);
+            }
+
+            _dbContext.SaveChanges();
+        }
+
+        public void SeedVeterinaryRecords()
+        {
+            if (_dbContext.VeterinaryRecord.Any())
+            {
+                return;
+            }
+
+            var diagnosis = VeterinaryRecordsList.GetVeterinaryRecords();
+            foreach (var m in diagnosis)
+            {
+                _dbContext.VeterinaryRecord.Add(m);
+            }
+
+            _dbContext.SaveChanges();
+        }
+        
         public void SeedVolunteers()
         {
             if (_dbContext.Volunteer.Any())
