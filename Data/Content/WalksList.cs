@@ -18,8 +18,8 @@ namespace iis.Data.Content
                 {
                     AnimalId = 1,
                     VolunteerId = 3,
-                    StartTime = DateTime.Parse("1-12-2022 13:20"),
-                    FinishTime = DateTime.Parse("1-12-2022 14:20"), 
+                    StartTime = DateTime.Parse("2022-1-12"),
+                    FinishTime = DateTime.Parse("2022-1-12"), 
                     State = WalkState.Finished,
                     Comment = "Volunteer come late"
                 },
@@ -27,8 +27,8 @@ namespace iis.Data.Content
                 {
                     AnimalId = 2,
                     VolunteerId = 1,
-                    StartTime = DateTime.Parse("21-12-2022 13:20"),
-                    FinishTime = DateTime.Parse("21-12-2022 14:20"),
+                    StartTime = DateTime.Parse("2022-2-22"),
+                    FinishTime = DateTime.Parse("2022-4-24"),
                     State = WalkState.NotStarted,
                     Comment = "Walk around city"
                 },
@@ -36,8 +36,8 @@ namespace iis.Data.Content
                 {
                     AnimalId = 3,
                     VolunteerId = 2,
-                    StartTime = DateTime.Parse("15-12-2022 8:00"),
-                    FinishTime = DateTime.Parse("15-12-2022 18:00"),
+                    StartTime = DateTime.Parse("2022-1-12"),
+                    FinishTime = DateTime.Parse("2022-2-12"),
                     State = WalkState.Started,
                     Comment = "Take animal home"
                 }

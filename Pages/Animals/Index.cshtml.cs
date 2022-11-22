@@ -25,5 +25,10 @@ namespace iis.Pages.Animals
         {
             Animal = await _context.Animal.ToListAsync();
         }
+
+        public IActionResult OnPostCreate()
+        {
+            return RedirectToPage("Create");
+        }
     }
 }

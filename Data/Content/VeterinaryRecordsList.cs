@@ -17,28 +17,28 @@ namespace iis.Data.Content
                 new VeterinaryRecord
                 {
                     AnimalId = 1,
-                    Date = DateTime.Parse("1-2-1984 14:00"),
+                    Date = DateTime.Parse("1984-1-2"),
                     Weight = 16.70,
                     Details = "Weight check at arrival."
                 },
                 new VeterinaryRecord
                 {
                     AnimalId = 2,
-                    Date = DateTime.Parse("13-12-2022 11:00"),
+                    Date = DateTime.Parse("2022-6-12"),
                     Weight = 5.45,
                     Details = "Inflammation discovered in the left ear."
                 },
                 new VeterinaryRecord
                 {
                     AnimalId = 2,
-                    Date = DateTime.Parse("14-12-2022 11:00"),
+                    Date = DateTime.Parse("2022-5-12"),
                     Weight = 5.45,
                     Details = "Injection given for inflammation in the ear."
                 },
                 new VeterinaryRecord
                 {
                     AnimalId = 3,
-                    Date = DateTime.Parse("30-6-2021 12:00"),
+                    Date = DateTime.Parse("2021-2-6"),
                     Weight = 7.15,
                     Details = "Amputation of right hind leg due to infection."
                 }

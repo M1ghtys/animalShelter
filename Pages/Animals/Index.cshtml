@@ -8,7 +8,10 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <button type="submit" asp-page-handler="Create">Create</button>
+    </form>
 </p>
 <table class="table">
     <thead>

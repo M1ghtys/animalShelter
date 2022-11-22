@@ -10,9 +10,15 @@ using iis.Models;
 
 namespace iis.Pages.Walks
 {
+
     public class CreateModel : PageModel
     {
         private readonly iis.Data.iisContext _context;
+
+        [BindProperty]
+        public Walk Walk { get; set; }
+        [BindProperty]
+        public Volunteer Volunteer { get; set; }
 
         public CreateModel(iis.Data.iisContext context)
         {
@@ -23,9 +29,6 @@ namespace iis.Pages.Walks
         {
             return Page();
         }
-
-        [BindProperty]
-        public Walk Walk { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()

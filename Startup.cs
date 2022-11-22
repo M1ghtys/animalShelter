@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using iis.Data;
 using System.IO;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
 
 namespace iis
 {
@@ -26,8 +29,15 @@ namespace iis
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddControllers();
+        /*    services
+                .AddAuthentication("BasicAuthentication");
+               .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
+            services.AddIdentity<iis.Models.Person, IdentityRole>()
+                .AddUserStore<iisContext>()
+                .AddDefaultTokenProviders();
+ */
             services.AddTransient<DbInitializer>();
 
             var configurationOptions = new ConfigurationOptions();
@@ -63,11 +73,19 @@ namespace iis
             });
 
             services.AddHttpClient();*/
+
+            services.AddRazorPages()
+                .AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbInitializer dbInitializer)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -84,6 +102,7 @@ namespace iis
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -91,6 +110,9 @@ namespace iis
                 endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
+
+            var configurationOptions = new ConfigurationOptions();
+            Configuration.GetSection(ConfigurationOptions.Configuration).Bind(configurationOptions);
 
             dbInitializer.Migrate();
             dbInitializer.SeedAnimals();
