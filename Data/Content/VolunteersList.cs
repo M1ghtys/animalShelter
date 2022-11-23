@@ -18,7 +18,7 @@ namespace iis.Data.Content
                 {
                     Name = "Eric Green",
                     Address = "Old Town 35",
-                    Phone = "+420 854 815 645",
+                    PhoneNumber = "+420 854 815 645",
                     Email = "ericishere@email.com",
                     Verified = true,
                     Comment = "Nice guy"
@@ -27,7 +27,7 @@ namespace iis.Data.Content
                 {
                     Name = "Jenny Blue",
                     Address = "New Town 36",
-                    Phone = "+15 654 215",
+                    PhoneNumber = "+15 654 215",
                     Email = "jennyishere@email.com",
                     Verified = false,
                     Comment = "Dogs loves her"
@@ -36,7 +36,7 @@ namespace iis.Data.Content
                 {
                     Name = "John Black",
                     Address = "Small Town 37",
-                    Phone = "+178 154 754 215",
+                    PhoneNumber = "+178 154 754 215",
                     Email = "johnishere@email.com",
                     Verified = true,
                     Comment = "Always late"

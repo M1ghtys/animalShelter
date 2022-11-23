@@ -18,7 +18,7 @@ namespace iis.Data.Content
                 {
                     Name = "Santa Claus",
                     Address = "North Pole 4",
-                    Phone = "+420 945 512 645",
+                    PhoneNumber = "+420 945 512 645",
                     Email = "santaishere@email.com",
                     OccupationId = 1,
                     RecruitedDay = DateTime.Parse("12-8-2014"),
@@ -27,7 +27,7 @@ namespace iis.Data.Content
                 {
                     Name = "Jess Yellow",
                     Address = "Big Town 17",
-                    Phone = "+41 516 25 85",
+                    PhoneNumber = "+41 516 25 85",
                     Email = "jessishere@email.com",
                     OccupationId = 2,
                     RecruitedDay = DateTime.Parse("12-8-2017"),
@@ -36,7 +36,7 @@ namespace iis.Data.Content
                 {
                     Name = "Jack Red",
                     Address = "Long Town 16",
-                    Phone = "+18 85 4 552",
+                    PhoneNumber = "+18 85 4 552",
                     Email = "jackishere@email.com",
                     OccupationId = 3,
                     RecruitedDay = DateTime.Parse("12-8-2019"),

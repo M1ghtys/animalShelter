@@ -7,9 +7,9 @@ namespace iis.Facades
 {
     public class WalkFacade
     {
-        private readonly iis.Data.iisContext _context;
+        private readonly iis.Data.DbContext _context;
 
-        public WalkFacade(iis.Data.iisContext context)
+        public WalkFacade(iis.Data.DbContext context)
         {
             _context = context;
         }

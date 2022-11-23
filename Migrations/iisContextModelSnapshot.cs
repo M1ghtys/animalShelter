@@ -8,7 +8,7 @@ using iis.Data;
 
 namespace iis.Migrations
 {
-    [DbContext(typeof(iisContext))]
+    [DbContext(typeof(Data.DbContext))]
     partial class iisContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
