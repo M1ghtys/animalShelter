@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace iis.Models
@@ -45,5 +47,10 @@ namespace iis.Models
         public Friendly Friendly { get; set; }
         public bool ForBeginners { get; set; }
         public Territory Territory { get; set; }
+        
+        public  HealthCondition? HealthCondition { get; set; }
+        public ICollection<Walk> Walks { get; set; } = new Collection<Walk>();
+        public ICollection<Photo> Photos { get; set; } = new Collection<Photo>();
+        public ICollection<VeterinaryRecord> VeterinaryRecords { get; set; } = new Collection<VeterinaryRecord>();
     }
 }

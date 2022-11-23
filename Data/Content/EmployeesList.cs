@@ -40,6 +40,15 @@ namespace iis.Data.Content
                     Email = "jackishere@email.com",
                     OccupationId = 3,
                     RecruitedDay = DateTime.Parse("12-8-2019"),
+                },
+                new Employee
+                {
+                    Name = "Charlie Brown",
+                    Address = "Sweet Town 15",
+                    Phone = "+18 75 9 552",
+                    Email = "charlieishere@email.com",
+                    OccupationId = 3,
+                    RecruitedDay = DateTime.Parse("13-8-2019"),
                 }
             };
         }

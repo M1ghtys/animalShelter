@@ -15,91 +15,95 @@
 </p>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].ChipNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Breed)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Gender)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Birth)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].DateOfArrival)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Size)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].About)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Reserved)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Friendly)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].ForBeginners)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Territory)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].ChipNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Breed)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Gender)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Birth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].DateOfArrival)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Size)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].About)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Reserved)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Friendly)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].ForBeginners)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Territory)
+        </th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Animal) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChipNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Breed)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gender)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Birth)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfArrival)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Size)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.About)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reserved)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Friendly)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ForBeginners)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Territory)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@foreach (var item in Model.Animals) {
+    <tr>
+        <td>
+            <img src="@Html.DisplayFor(modelItem => item.Photos.First().Source)" height="80"/>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChipNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Breed)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Gender)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Birth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateOfArrival)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Size)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.About)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Reserved)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Friendly)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ForBeginners)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Territory)
+        </td>
+        <td>
+            <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+        </td>
+    </tr>
 }
     </tbody>
 </table>

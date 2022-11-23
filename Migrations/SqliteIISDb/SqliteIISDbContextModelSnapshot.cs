@@ -191,10 +191,44 @@ namespace iis.Migrations.SqliteIISDb
                     b.ToTable("Animal");
                 });
 
+            modelBuilder.Entity("iis.Models.Employee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("OccupationId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("RecruitedDay")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OccupationId");
+
+                    b.ToTable("Employee");
+                });
+
             modelBuilder.Entity("iis.Models.HealthCondition", b =>
                 {
-                    b.Property<int>("AnimalId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AnimalId")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("Castration")
@@ -212,7 +246,10 @@ namespace iis.Migrations.SqliteIISDb
                     b.Property<bool>("Vaccinated")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("AnimalId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnimalId")
+                        .IsUnique();
 
                     b.ToTable("HealthCondition");
                 });
@@ -250,6 +287,8 @@ namespace iis.Migrations.SqliteIISDb
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AnimalId");
 
                     b.ToTable("Photo");
                 });
@@ -349,6 +388,8 @@ namespace iis.Migrations.SqliteIISDb
                         .HasColumnType("REAL");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AnimalId");
 
                     b.ToTable("VeterinaryRecord");
                 });
@@ -450,13 +491,95 @@ namespace iis.Migrations.SqliteIISDb
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                    b.HasIndex("AnimalId");
+
+                    b.HasIndex("VolunteerId");
+
+                    b.ToTable("Walk");
+                });
+
+            modelBuilder.Entity("iis.Models.Employee", b =>
                 {
-                    b.HasOne("iis.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                    b.HasOne("iis.Models.Occupation", "Occupation")
+                        .WithMany("Employees")
+                        .HasForeignKey("OccupationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Occupation");
+                });
+
+            modelBuilder.Entity("iis.Models.HealthCondition", b =>
+                {
+                    b.HasOne("iis.Models.Animal", "Animal")
+                        .WithOne("HealthCondition")
+                        .HasForeignKey("iis.Models.HealthCondition", "AnimalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Animal");
+                });
+
+            modelBuilder.Entity("iis.Models.Photo", b =>
+                {
+                    b.HasOne("iis.Models.Animal", "Animal")
+                        .WithMany("Photos")
+                        .HasForeignKey("AnimalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Animal");
+                });
+
+            modelBuilder.Entity("iis.Models.VeterinaryRecord", b =>
+                {
+                    b.HasOne("iis.Models.Animal", "Animal")
+                        .WithMany("VeterinaryRecords")
+                        .HasForeignKey("AnimalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Animal");
+                });
+
+            modelBuilder.Entity("iis.Models.Walk", b =>
+                {
+                    b.HasOne("iis.Models.Animal", "Animal")
+                        .WithMany("Walks")
+                        .HasForeignKey("AnimalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("iis.Models.Volunteer", "Volunteer")
+                        .WithMany("Walks")
+                        .HasForeignKey("VolunteerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Animal");
+
+                    b.Navigation("Volunteer");
+                });
+
+            modelBuilder.Entity("iis.Models.Animal", b =>
+                {
+                    b.Navigation("HealthCondition");
+
+                    b.Navigation("Photos");
+
+                    b.Navigation("VeterinaryRecords");
+
+                    b.Navigation("Walks");
+                });
+
+            modelBuilder.Entity("iis.Models.Occupation", b =>
+                {
+                    b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("iis.Models.Volunteer", b =>
+                {
+                    b.Navigation("Walks");
                 });
 #pragma warning restore 612, 618
         }
