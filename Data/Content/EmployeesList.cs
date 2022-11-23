@@ -18,28 +18,28 @@ namespace iis.Data.Content
                 {
                     Name = "Santa Claus",
                     Address = "North Pole 4",
-                    PhoneNumber = "+420 945 512 645",
+                    Phone = "+420 945 512 645",
                     Email = "santaishere@email.com",
                     OccupationId = 1,
-                    RecruitedDay = DateTime.Parse("12-8-2014"),
+                    RecruitedDay = DateTime.Parse("2014-12-8"),
                 },
                 new Employee
                 {
                     Name = "Jess Yellow",
                     Address = "Big Town 17",
-                    PhoneNumber = "+41 516 25 85",
+                    Phone = "+41 516 25 85",
                     Email = "jessishere@email.com",
                     OccupationId = 2,
-                    RecruitedDay = DateTime.Parse("12-8-2017"),
+                    RecruitedDay = DateTime.Parse("2017-12-8"),
                 },
                 new Employee
                 {
                     Name = "Jack Red",
                     Address = "Long Town 16",
-                    PhoneNumber = "+18 85 4 552",
+                    Phone = "+18 85 4 552",
                     Email = "jackishere@email.com",
                     OccupationId = 3,
-                    RecruitedDay = DateTime.Parse("12-8-2019"),
+                    RecruitedDay = DateTime.Parse("2019-2-8"),
                 },
                 new Employee
                 {
@@ -48,7 +48,7 @@ namespace iis.Data.Content
                     Phone = "+18 75 9 552",
                     Email = "charlieishere@email.com",
                     OccupationId = 3,
-                    RecruitedDay = DateTime.Parse("13-8-2019"),
+                    RecruitedDay = DateTime.Parse("2019-3-8"),
                 }
             };
         }

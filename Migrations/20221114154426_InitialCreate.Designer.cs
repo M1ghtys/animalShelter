@@ -9,7 +9,7 @@ using iis.Data;
 
 namespace iis.Migrations
 {
-    [DbContext(typeof(Data.DbContext))]
+    [DbContext(typeof(iisContext))]
     [Migration("20221114154426_InitialCreate")]
     partial class InitialCreate
     {

@@ -2,7 +2,7 @@ using System;
 
 namespace iis.Models
 {
-    public class Employee : User
+    public class Employee : Person
     {
         public int OccupationId { get; set; }
         public Occupation? Occupation { get; set; }

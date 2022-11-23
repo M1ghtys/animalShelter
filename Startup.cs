@@ -10,12 +10,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using iis.Data;
-using iis.Controllers;
 using System.IO;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication;
-
 
 namespace iis
 {
@@ -34,22 +32,25 @@ namespace iis
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+        /*    services
+                .AddAuthentication("BasicAuthentication");
+               .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
-            services.AddIdentity<iis.Models.User, IdentityRole>()
-                .AddEntityFrameworkStores<Data.DbContext>()
+            services.AddIdentity<iis.Models.Person, IdentityRole>()
+                .AddUserStore<iisContext>()
                 .AddDefaultTokenProviders();
- 
+ */
             services.AddTransient<DbInitializer>();
 
             var configurationOptions = new ConfigurationOptions();
             Configuration.GetSection(ConfigurationOptions.Configuration).Bind(configurationOptions);
             if (configurationOptions.Database.DatabaseProvider == DatabaseProvider.PostgreSQL)
             {
-                services.AddTransient<Data.DbContext, PostgreSqlDbContext>(_ => new PostgreSqlDbContext(configurationOptions.Database.PostgresConnectionString));
+                services.AddTransient<iisContext, PostgreSqlDbContext>(_ => new PostgreSqlDbContext(configurationOptions.Database.PostgresConnectionString));
             }
             else
             {
-                services.AddTransient<Data.DbContext, SqliteIISDbContext>(_ =>
+                services.AddTransient<iisContext, SqliteIISDbContext>(_ =>
                 {
                     var pathRootDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "iis-server");
                     if (!Directory.Exists(pathRootDirectory))
@@ -66,20 +67,7 @@ namespace iis
                 });
             }
 
-            services.Configure<IdentityOptions>(options =>
-            {
-                // Password settings
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 8;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
-
-                // User settings
-                options.User.RequireUniqueEmail = false;
-            });
-
-            services.ConfigureApplicationCookie(options =>
+            /*services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
                 options.Cookie.Name = "UserIdentification";
@@ -90,7 +78,7 @@ namespace iis
                 options.SlidingExpiration = true;
             });
 
-            services.AddHttpClient();
+            services.AddHttpClient();*/
 
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();
@@ -136,13 +124,10 @@ namespace iis
 
             if (NewDBCreated)
             {
-                dbInitializer.SeedRoles();
-                //TODO change password to secret
-                dbInitializer.SeedAdminUser("password");
                 dbInitializer.SeedAnimals();
+                dbInitializer.SeedOccupations();
                 dbInitializer.SeedEmployees();
                 dbInitializer.SeedHealthConditions();
-                dbInitializer.SeedOccupations();
                 dbInitializer.SeedPhotos();
                 dbInitializer.SeedVeterinaryRecords();
                 dbInitializer.SeedVolunteers();

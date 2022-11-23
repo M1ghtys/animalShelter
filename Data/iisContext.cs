@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using iis.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace iis.Data
 {
-    public class DbContext : IdentityDbContext<User>
+    public class iisContext : DbContext
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

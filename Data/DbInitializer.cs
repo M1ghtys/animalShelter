@@ -1,70 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using iis.Data.Content;
 using System.Linq;
-using Microsoft.AspNetCore.Identity;
-using System;
 
 namespace iis.Data
 {
     public class DbInitializer
     {
-        private readonly DbContext _dbContext;
-        private readonly UserManager<Models.User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly iisContext _dbContext;
 
-        public DbInitializer(DbContext dbcontext, UserManager<iis.Models.User> userManager, RoleManager<IdentityRole> roleManager)
+        public DbInitializer(iisContext dbcontext)
         {
             _dbContext = dbcontext;
-            _userManager = userManager;
-            _roleManager = roleManager;
         }
         
         public void Migrate() => _dbContext.Database.Migrate();
-
-        public void SeedRoles()
-        {
-            if (_dbContext.Roles.Any())
-            {
-                return;
-            }
-
-            var roles = Roles.GetRoles().Values;
-            foreach (var role in roles)
-            {
-                var result = _roleManager.CreateAsync(new IdentityRole(role)).Result;
-                if (!result.Succeeded)
-                {
-                    throw new InvalidOperationException("Initial db with roles failed");
-                }
-            }
-        }
-
-        public void SeedAdminUser(string password)
-        {
-            if (_dbContext.Users.Any())
-            {
-                return;
-            }
-
-            var admin = new Models.User
-            {
-                UserName = "admin",
-                Email = "admin@example.com",
-                EmailConfirmed = true,
-                LockoutEnabled = false,
-            };
-
-            var result = _userManager.CreateAsync(admin, password).Result;
-            if (result.Succeeded)
-            {
-                result = _userManager.AddToRoleAsync(admin, Roles.GetRoles()[Role.Admin]).Result;
-            }
-
-            if (!result.Succeeded)
-            {
-                throw new InvalidOperationException("Initial db with admin failed");
-            }
-        }
 
         public void SeedAnimals()
         {

@@ -2,7 +2,7 @@
 
 namespace iis.Data
 {
-    public class PostgreSqlDbContext : DbContext
+    public class PostgreSqlDbContext : iisContext
     {
         private readonly string _connectionString = "iisContext";
 
