@@ -26,6 +26,8 @@ namespace iis
 
         public IConfiguration Configuration { get; }
 
+        private bool NewDBCreated = false;
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -56,7 +58,11 @@ namespace iis
                         Directory.CreateDirectory(pathRootDirectory);
                     }
 
-                    var dbPath = Path.Combine(pathRootDirectory, "iis.db");
+                    var dbName = "iis.db";
+                    var dbPath = Path.Combine(pathRootDirectory, dbName);
+                    
+                    if (!File.Exists(dbPath)) NewDBCreated = true;
+                    
                     return new SqliteIISDbContext($"Data Source={dbPath}");
                 });
             }
@@ -113,16 +119,21 @@ namespace iis
 
             var configurationOptions = new ConfigurationOptions();
             Configuration.GetSection(ConfigurationOptions.Configuration).Bind(configurationOptions);
-
+            
             dbInitializer.Migrate();
-            dbInitializer.SeedAnimals();
-            dbInitializer.SeedEmployees();
-            dbInitializer.SeedHealthConditions();
-            dbInitializer.SeedOccupations();
-            dbInitializer.SeedPhotos();
-            dbInitializer.SeedVeterinaryRecords();
-            dbInitializer.SeedVolunteers();
-            dbInitializer.SeedWalks();
+
+            if (NewDBCreated)
+            {
+                dbInitializer.SeedAnimals();
+                dbInitializer.SeedOccupations();
+                dbInitializer.SeedEmployees();
+                dbInitializer.SeedHealthConditions();
+                dbInitializer.SeedPhotos();
+                dbInitializer.SeedVeterinaryRecords();
+                dbInitializer.SeedVolunteers();
+                dbInitializer.SeedWalks();
+            }
+            
         }
     }
 }

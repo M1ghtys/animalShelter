@@ -29,4 +29,13 @@
     <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Migrations\SqliteIISDb\20221117135338_AddTablePhotos.Designer.cs">
+      <DependentUpon>20221117135338_AddTablePhotos.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Migrations\SqliteIISDb\20221117130722_AddTableOccupations.Designer.cs">
+      <DependentUpon>20221117130722_AddTableOccupations.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

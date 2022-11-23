@@ -26,6 +26,9 @@ namespace iis.Pages.Animals
         [BindProperty]
         public Animal Animal { get; set; }
 
+        [BindProperty]
+        public string Photo { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null || !_facade.AnimalExists(id))
@@ -34,6 +37,7 @@ namespace iis.Pages.Animals
             }
 
             Animal = await _context.Animal.FirstOrDefaultAsync(m => m.Id == id);
+            Animal.Photos = _context.Photo.Where(p => p.AnimalId == Animal.Id).ToList();
 
             if (Animal == null)
             {
@@ -51,6 +55,15 @@ namespace iis.Pages.Animals
                 return Page();
             }
 
+            if (Photo != null)
+            {
+                _context.Photo.Add(new Photo()
+                {
+                    AnimalId = Animal.Id,
+                    Source = Photo
+                });
+            }
+            
             _context.Attach(Animal).State = EntityState.Modified;
 
             try

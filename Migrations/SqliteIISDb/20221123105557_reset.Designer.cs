@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using iis.Data;
 
 namespace iis.Migrations.SqliteIISDb
 {
     [DbContext(typeof(SqliteIISDbContext))]
-    partial class SqliteIISDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221123105557_reset")]
+    partial class reset
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

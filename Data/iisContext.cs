@@ -12,6 +12,30 @@ namespace iis.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
+            modelBuilder.Entity<HealthCondition>()
+                .HasOne(h => h.Animal)
+                .WithOne(a => a.HealthCondition)
+                .HasForeignKey<HealthCondition>(h => h.AnimalId);
+            modelBuilder.Entity<Photo>()
+                .HasOne(p => p.Animal)
+                .WithMany(a => a.Photos);
+            
+            modelBuilder.Entity<Walk>()
+                .HasOne(w => w.Animal)
+                .WithMany(a => a.Walks);
+            modelBuilder.Entity<Walk>()
+                .HasOne(w => w.Volunteer)
+                .WithMany(v => v.Walks);
+            
+            modelBuilder.Entity<VeterinaryRecord>()
+                .HasOne(v => v.Animal)
+                .WithMany(a => a.VeterinaryRecords);
+            
+            modelBuilder.Entity<Employee>()
+                .HasOne(e => e.Occupation)
+                .WithMany(o => o.Employees)
+                .HasForeignKey(e => e.OccupationId);
         }
 
         public DbSet<Animal> Animal { get; set; }

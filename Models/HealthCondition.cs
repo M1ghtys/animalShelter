@@ -6,9 +6,9 @@ namespace iis.Models
 {
     public class HealthCondition
     {
-        [Required]
-        [Key]
+        public int Id { get; set; }
         public int AnimalId { get; set; }
+        public Animal? Animal { get; set; }
         public bool Tattoo { get; set; }
         public bool Castration { get; set; }
         public bool Vaccinated { get; set; }

@@ -14,7 +14,9 @@ namespace iis.Models
     {
         public int Id { get; set; }
         public int AnimalId { get; set; }
+        public Animal? Animal { get; set; }
         public int VolunteerId { get; set; }
+        public Volunteer? Volunteer { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime FinishTime { get; set; }
         public WalkState State { get; set; }

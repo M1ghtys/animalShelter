@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using iis.Data;
 
 namespace iis.Migrations.SqliteIISDb
 {
     [DbContext(typeof(SqliteIISDbContext))]
-    partial class SqliteIISDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221122233526_AddFKeys2")]
+    partial class AddFKeys2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,10 +98,6 @@ namespace iis.Migrations.SqliteIISDb
 
             modelBuilder.Entity("iis.Models.HealthCondition", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("AnimalId")
                         .HasColumnType("INTEGER");
 
@@ -118,10 +116,7 @@ namespace iis.Migrations.SqliteIISDb
                     b.Property<bool>("Vaccinated")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("AnimalId")
-                        .IsUnique();
+                    b.HasKey("AnimalId");
 
                     b.ToTable("HealthCondition");
                 });
