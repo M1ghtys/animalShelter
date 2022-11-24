@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace iis.Data
 {
-    public class SqliteIISDbContext : iisContext
+    public class SqliteIISDbContext : DbContext
     {
         private readonly string _connectionString = "iisContext";
         private readonly SqliteConnection _inMemory = null;

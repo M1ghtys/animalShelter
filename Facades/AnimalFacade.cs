@@ -7,9 +7,9 @@ namespace iis.Facades
 {
     public class AnimalFacade
     {
-        private readonly iis.Data.iisContext _context;
+        private readonly iis.Data.DbContext _context;
 
-        public AnimalFacade(iis.Data.iisContext context)
+        public AnimalFacade(iis.Data.DbContext context)
         {
             _context = context;
         }

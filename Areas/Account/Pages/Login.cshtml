@@ -1,0 +1,39 @@
+﻿@page
+@model iis.Pages.Account.LoginModel
+@section Scripts{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+}
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container">
+    <div style="text-align:center;">
+        <form method="post">
+            <h2>Animal Shelter</h2>
+            <div style="display:inline-block; margin-top:2%;">
+                <div>
+                    <div class="form-group">
+                        <label style="display:block;margin-bottom:-1%;" for="username">User Name</label>
+                        <input style="display:block;" placeholder="Your Username" required="required" type="text" id="username" asp-for="Username"/>
+                    </div>
+               
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label style="display:block;margin-bottom:-1%;" for="password">Password</label>
+                        <input style="display:block;" placeholder="Your Password" required="required" type="password" id="password" asp-for="Password"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button class="btn btn-primary btn-block" type="submit" asp-page-handler="Login">Login</button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary btn-block" type="submit" asp-page-handler="Register">Register</button>
+                    </div>
+                </div>
+            </div>
+        </form>    
+    </div>
+</div>
