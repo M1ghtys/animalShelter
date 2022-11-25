@@ -5,20 +5,23 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class=row>
+    <div class=col-sm-8>
+        <h1>List of animals at our shelter</h1>
+    </div>
+    <div class=col-sm-4 align=right>
+        <p>
+            <form method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" asp-page-handler="Create">Create Animal</button>
+            </form>
+        </p>
+    </div>
+</div>
 
-<p>
-    <form method="post">
-        @Html.AntiForgeryToken()
-        <button type="submit" asp-page-handler="Create">Create</button>
-    </form>
-</p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].ChipNumber)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Animal[0].Name)
             </th>
@@ -59,9 +62,6 @@
 @foreach (var item in Model.Animal) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ChipNumber)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
@@ -82,21 +82,21 @@
             <td>
                 @Html.DisplayFor(modelItem => item.About)
             </td>
-            <td>
+            <td align=center>
                 @Html.DisplayFor(modelItem => item.Reserved)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Friendly)
             </td>
-            <td>
+            <td align=center>
                 @Html.DisplayFor(modelItem => item.ForBeginners)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Territory)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
                 <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>

@@ -135,6 +135,28 @@
 	    </tbody>
     </table>
 
+	<table class=table>
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.Animal.VeterinaryRecords)
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.Animal.VeterinaryRecords) {
+				<tr>
+					<td>
+						@Html.DisplayFor(modeItem => item.Date)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Details)
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
 </div>
 <div>
     <a asp-page="./Edit" asp-route-id="@Model.Animal.Id">Edit</a> |
