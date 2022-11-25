@@ -39,6 +39,8 @@ namespace iis
                 .AddEntityFrameworkStores<Data.DbContext>()
                 .AddDefaultTokenProviders();
 
+            
+
             services.AddTransient<DbInitializer>();
 
             var configurationOptions = new ConfigurationOptions();
@@ -93,6 +95,13 @@ namespace iis
 
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();
+
+            // add policeies for authorization
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole",
+                    policy => policy.RequireRole("Admin"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -130,22 +139,22 @@ namespace iis
 
             var configurationOptions = new ConfigurationOptions();
             Configuration.GetSection(ConfigurationOptions.Configuration).Bind(configurationOptions);
-            
+
             dbInitializer.Migrate();
-            
-          
-                dbInitializer.SeedRoles();
-                //TODO change password to secret
-                dbInitializer.SeedAdminUser("password");
-                dbInitializer.SeedAnimals();
-                //dbInitializer.SeedEmployees();
-                //dbInitializer.SeedHealthConditions();
-                dbInitializer.SeedOccupations();
-                dbInitializer.SeedPhotos();
-                dbInitializer.SeedVeterinaryRecords();
-                //dbInitializer.SeedVolunteers();
-                dbInitializer.SeedWalks();
-            
+
+
+            dbInitializer.SeedRoles();
+            //TODO change password to secret
+            dbInitializer.SeedAdminUser("password");
+            dbInitializer.SeedAnimals();
+            dbInitializer.SeedEmployees();
+            //dbInitializer.SeedHealthConditions();
+            dbInitializer.SeedOccupations();
+            dbInitializer.SeedPhotos();
+            dbInitializer.SeedVeterinaryRecords();
+            //dbInitializer.SeedVolunteers();
+            dbInitializer.SeedWalks();
+
 
         }
     }

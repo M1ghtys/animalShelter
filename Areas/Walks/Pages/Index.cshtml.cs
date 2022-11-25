@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using iis.Data;
 using iis.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace iis.Pages.Walks
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly iis.Data.DbContext _context;

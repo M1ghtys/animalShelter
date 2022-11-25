@@ -7,20 +7,21 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using iis.Data;
 using iis.Models;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace iis.Pages.Occupations
 {
+    [Authorize(Policy = "RequireAdministratorRole")]
     public class IndexModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
-
         public IndexModel(iis.Data.DbContext context)
         {
-            _context = context;
+            _context = context;  
         }
 
         public IList<Occupation> Occupation { get;set; }
-
         public async Task OnGetAsync()
         {
             Occupation = await _context.Occupation.ToListAsync();
