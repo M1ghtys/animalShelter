@@ -9,11 +9,10 @@ namespace iis.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
+
             modelBuilder.Entity<HealthCondition>()
                 .HasOne(h => h.Animal)
-                .WithOne(a => a.HealthCondition)
-                .HasForeignKey<HealthCondition>(h => h.AnimalId);
+                .WithOne(a => a.HealthCondition);
             modelBuilder.Entity<Photo>()
                 .HasOne(p => p.Animal)
                 .WithMany(a => a.Photos);
@@ -28,11 +27,10 @@ namespace iis.Data
             modelBuilder.Entity<VeterinaryRecord>()
                 .HasOne(v => v.Animal)
                 .WithMany(a => a.VeterinaryRecords);
-            
+
             modelBuilder.Entity<Employee>()
                 .HasOne(e => e.Occupation)
-                .WithMany(o => o.Employees)
-                .HasForeignKey(e => e.OccupationId);
+                .WithMany(o => o.Employees);
         }
 
         public DbSet<Animal> Animal { get; set; }
