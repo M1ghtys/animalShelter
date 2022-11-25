@@ -84,80 +84,51 @@
 		    @Html.DisplayFor(model => model.Animal.Territory)
 	    </dd>
 	    <dt class="col-sm-2">
-		    @Html.DisplayNameFor(model => model.HealthCondition.Tattoo)
+		    @Html.DisplayNameFor(model => model.Animal.HealthCondition.Tattoo)
 	    </dt>
 	    <dd class="col-sm-10">
-		    @Html.DisplayFor(model => model.HealthCondition.Tattoo)
+		    @Html.DisplayFor(model => model.Animal.HealthCondition.Tattoo)
 	    </dd>
 	    <dt class="col-sm-2">
-		    @Html.DisplayNameFor(model => model.HealthCondition.Castration)
+		    @Html.DisplayNameFor(model => model.Animal.HealthCondition.Castration)
 	    </dt>
 	    <dd class="col-sm-10">
-		    @Html.DisplayFor(model => model.HealthCondition.Castration)
+		    @Html.DisplayFor(model => model.Animal.HealthCondition.Castration)
 	    </dd>
 	    <dt class="col-sm-2">
-		    @Html.DisplayNameFor(model => model.HealthCondition.Vaccinated)
+		    @Html.DisplayNameFor(model => model.Animal.HealthCondition.Vaccinated)
 	    </dt>
 	    <dd class="col-sm-10">
-		    @Html.DisplayFor(model => model.HealthCondition.Vaccinated)
+		    @Html.DisplayFor(model => model.Animal.HealthCondition.Vaccinated)
 	    </dd>
 	    <dt class="col-sm-2">
-		    @Html.DisplayNameFor(model => model.HealthCondition.Handicapped)
+		    @Html.DisplayNameFor(model => model.Animal.HealthCondition.Handicapped)
 	    </dt>
 	    <dd class="col-sm-10">
-		    @Html.DisplayFor(model => model.HealthCondition.Handicapped)
+		    @Html.DisplayFor(model => model.Animal.HealthCondition.Handicapped)
 	    </dd>
 	    <dt class="col-sm-2">
-		    @Html.DisplayNameFor(model => model.HealthCondition.Others)
+        		    @Html.DisplayNameFor(model => model.Animal.HealthCondition.Others)
+        	    </dt>
+	    <dd class="col-sm-10">
+        		    @Html.DisplayFor(model => model.Animal.HealthCondition.Others)
+		</dd>
+	    
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Photos.First().Source)
 	    </dt>
 	    <dd class="col-sm-10">
-		    @Html.DisplayFor(model => model.HealthCondition.Others)
-	    </dd>
+		    <table class="table">
+			    @foreach (var item in Model.Animal.Photos) {
+				    <tr>
+					    <img src="@Html.DisplayFor(modelItem => item.Source)" height="100"/>
+				    </tr>
+			    }
+		    </table>
+		</dd>
     </dl>
-
-    <table class="table">
-	    <thead>
-		    <tr>
-			    <th>
-				    @Html.DisplayNameFor(model => model.Photo[0].Source)
-			    </th>
-			    <th></th>
-		    </tr>
-	    </thead>
-	    <tbody>
-	    @foreach (var item in Model.Photo) {
-		    <tr>
-			    <td>
-				    @Html.DisplayFor(modelItem => item.Source)
-			    </td>
-		    </tr>
-	    }
-	    </tbody>
-    </table>
-
-	<table class=table>
-		<thead>
-			<tr>
-				<th>
-					@Html.DisplayNameFor(model => model.Animal.VeterinaryRecords)
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model.Animal.VeterinaryRecords) {
-				<tr>
-					<td>
-						@Html.DisplayFor(modeItem => item.Date)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Details)
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-
 </div>
+
 <div>
     <a asp-page="./Edit" asp-route-id="@Model.Animal.Id">Edit</a> |
     <a asp-page="./Index">Back to List</a>

@@ -23,10 +23,7 @@ namespace iis.Pages.Animals
         }
 
         public Animal Animal { get; set; }
-        public HealthCondition HealthCondition { get; set; }
-        public IList<Photo> Photo { get; set; }
-        public IList<VeterinaryRecord> VeterinaryRecord { get; set; }
-
+        
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null || !_facade.AnimalExists(id))
@@ -35,11 +32,10 @@ namespace iis.Pages.Animals
             }
 
             Animal = await _context.Animal.FirstOrDefaultAsync(m => m.Id == id);
-            HealthCondition = await _context.HealthCondition.FirstOrDefaultAsync(m => m.AnimalId == Animal.Id);
-            Photo = _context.Photo.Where(m => m.AnimalId == Animal.Id).ToList();
-            VeterinaryRecord = _context.VeterinaryRecord.Where(m => m.AnimalId == Animal.Id).ToList();
+            Animal.Photos = _context.Photo.Where(m => m.AnimalId == Animal.Id).ToList();
+            Animal.HealthCondition = _context.HealthCondition.FirstOrDefault(m => m.AnimalId == Animal.Id);
 
-            if (Animal == null || HealthCondition == null)
+            if (Animal == null)
             {
                 return NotFound();
             }

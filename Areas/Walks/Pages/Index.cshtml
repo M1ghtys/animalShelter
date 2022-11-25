@@ -14,35 +14,35 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Walk[0].AnimalId)
+                Animal Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Walk[0].VolunteerId)
+                Volunteer Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Walk[0].StartTime)
+                @Html.DisplayNameFor(model => model.Walks[0].StartTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Walk[0].FinishTime)
+                @Html.DisplayNameFor(model => model.Walks[0].FinishTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Walk[0].State)
+                @Html.DisplayNameFor(model => model.Walks[0].State)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Walk[0].Comment)
+                @Html.DisplayNameFor(model => model.Walks[0].Comment)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Walk)
+        @foreach (var item in Model.Walks)
         {
         <tr>
             <td>
-                    @Html.DisplayFor(modelItem => item.AnimalId)
+                    @Html.DisplayFor(modelItem => item.Animal.Name)
             </td>
             <td>
-                    @Html.DisplayFor(modelItem => item.VolunteerId)
+                    @Html.DisplayFor(modelItem => item.Volunteer.Name)
             </td>
             <td>
                     @Html.DisplayFor(modelItem => item.StartTime)

@@ -17,8 +17,9 @@ namespace iis.Pages.Walks
 
         [BindProperty]
         public Walk Walk { get; set; }
+        
         [BindProperty]
-        public Volunteer Volunteer { get; set; }
+        public IList<Animal> Animals { get; set; }
 
         public CreateModel(iis.Data.DbContext context)
         {
@@ -27,12 +28,18 @@ namespace iis.Pages.Walks
 
         public IActionResult OnGet()
         {
+            Animals = _context.Animal.ToList();
+            
             return Page();
         }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
+
+            //TODO debug => smazat, nejede kvůli GUID
+            //Walk.VolunteerId = _context.Volunteer.First().Id; 
+
             if (!ModelState.IsValid)
             {
                 return Page();

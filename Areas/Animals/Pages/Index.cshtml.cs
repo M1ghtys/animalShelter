@@ -21,11 +21,23 @@ namespace iis.Pages.Animals
             _context = context;
         }
 
-        public IList<Animal> Animal { get;set; }
+        public IList<Animal> Animals { get;set; }
 
         public async Task OnGetAsync()
         {
-            Animal = await _context.Animal.ToListAsync();
+            Animals = await _context.Animal.ToListAsync();
+            foreach (var a in Animals)
+            {
+                a.Photos = _context.Photo.Where(p => p.AnimalId == a.Id).ToList();
+                if (!a.Photos.Any())
+                {
+                    a.Photos.Add(new Photo()
+                    {
+                        AnimalId = a.Id,
+                        Source = "https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png"
+                    });
+                }
+            }
         }
 
         public IActionResult OnPostCreate()
