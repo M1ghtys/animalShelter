@@ -7,7 +7,7 @@
 
 <h1>Veterinary Records</h1>
 
-@if (User.IsInRole("Caregiver"))
+@if (User.IsInRole("Caretaker"))
 {
     <p>
         <a asp-page="Create">Create New request</a>
