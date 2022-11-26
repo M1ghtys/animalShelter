@@ -1,0 +1,84 @@
+﻿@page
+@model iis.Pages.Walks.IndexModel
+
+@{
+    ViewData["Title"] = "Walks";
+}
+
+<div class=row>
+	<div class=col-sm-8>
+		<h1>List of walks</h1>
+	</div>
+    @if (User.Identity.IsAuthenticated && !User.IsInRole("UnverifiedUser"))
+    {
+	    <div class=col-sm-4 align=right>
+		    <p>
+			    <form method="post">
+				    @Html.AntiForgeryToken()
+				    <button type="submit" asp-page-handler="Create">Create New</button>
+			    </form>
+		    </p>
+	    </div>
+    }
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Animal Name
+            </th>
+            <th>
+                Volunteer Name
+            </th>
+            <th>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.StartTimeSort">
+                    @Html.DisplayNameFor(model => model.Walks[0].StartTime)
+                </a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Walks[0].FinishTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Walks[0].State)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Walks[0].Comment)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Walks)
+        {
+        <tr>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Animal.Name)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.User.Name)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.FinishTime)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.State)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+	        <td>
+		        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker")))
+		        {
+			        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+			        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+		        }
+		        <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+	        </td>
+        </tr>
+}
+    </tbody>
+</table>

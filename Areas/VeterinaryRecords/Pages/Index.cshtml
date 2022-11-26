@@ -1,0 +1,81 @@
+﻿@page
+@model iis.Pages.VeterinaryRecords.IndexModel
+
+@{
+    ViewData["Title"] = "VeterinaryRecords";
+}
+
+<h1>Veterinary Records</h1>
+
+
+<div class=row>
+	<div class=col-sm-8>
+		<h1>List of walks</h1>
+	</div>
+	@if (User.IsInRole("Caretaker"))
+	{
+		<div class=col-sm-4 align=right>
+			<p>
+				<form method="post">
+					@Html.AntiForgeryToken()
+					<button type="submit" asp-page-handler="Create">Create New</button>
+				</form>
+			</p>
+		</div>
+	}
+</div>
+
+
+<table class="table">
+	<thead>
+	<tr>
+		<th>
+			<a asp-page="./Index" asp-route-sortOrder="@Model.AnimalIDSort">
+				@Html.DisplayNameFor(model => model.VeterinaryRecords[0].AnimalId)
+			</a>
+		</th>
+		<th>
+			<a asp-page="./Index" asp-route-sortOrder="@Model.DateSort">
+				@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Date)
+			</a>
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Weight)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Details)
+		</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody>
+	@foreach (var item in Model.VeterinaryRecords)
+	{
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.AnimalId)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Date)
+			</td>
+			<td>
+				@if (item.Weight > 0.0)
+				{
+						@Html.DisplayFor(modelItem => item.Weight)
+				}
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Details)
+			</td>
+			<td>
+				@if (User.IsInRole("Vet"))
+				{
+					<a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+					<a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+				}
+				<a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+			</td>
+		</tr>
+	}
+	</tbody>
+</table>

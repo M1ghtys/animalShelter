@@ -11,7 +11,7 @@ namespace iis
     public class DatabaseConfiguration
     {
         public DatabaseProvider DatabaseProvider { get; set; } = DatabaseProvider.SQLite;
-        public string PostgresConnectionString { get; set; }
+        public string PostgresConnectionString { get; set; } 
     }
 
     public enum DatabaseProvider

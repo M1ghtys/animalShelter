@@ -1,0 +1,135 @@
+﻿@page "{id:Guid}"
+@model iis.Pages.Animals.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Animal</h4>
+    <hr />
+    <dl class="row">
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.ChipNumber)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.ChipNumber)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Name)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.Name)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Breed)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.Breed)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Gender)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.Gender)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Birth)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.Birth)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.DateOfArrival)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.DateOfArrival)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Size)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.Size)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.About)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.About)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Reserved)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.Reserved)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Friendly)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.Friendly)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.ForBeginners)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.ForBeginners)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Territory)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.Territory)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Tattoo)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.Tattoo)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Castration)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.Castration)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Vaccinated)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.Vaccinated)
+	    </dd>
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Handicapped)
+	    </dt>
+	    <dd class="col-sm-10">
+		    @Html.DisplayFor(model => model.Animal.Handicapped)
+	    </dd>
+	    <dt class="col-sm-2">
+        		    @Html.DisplayNameFor(model => model.Animal.Comment)
+        	    </dt>
+	    <dd class="col-sm-10">
+        		    @Html.DisplayFor(model => model.Animal.Comment)
+		</dd>
+	    
+	    <dt class="col-sm-2">
+		    @Html.DisplayNameFor(model => model.Animal.Photos.First().Source)
+	    </dt>
+	    <dd class="col-sm-10">
+		    <table class="table">
+			    @foreach (var item in Model.Animal.Photos) {
+				    <tr>
+					    <img src="@Html.DisplayFor(modelItem => item.Source)" height="100"/>
+				    </tr>
+			    }
+		    </table>
+		</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Animal.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

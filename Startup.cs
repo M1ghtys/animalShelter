@@ -10,7 +10,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using iis.Data;
+using iis.Controllers;
 using System.IO;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
+
 
 namespace iis
 {
@@ -22,11 +27,17 @@ namespace iis
         }
 
         public IConfiguration Configuration { get; }
-
+        
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddControllers();
+
+            services.AddIdentity<iis.Models.User, IdentityRole>()
+                .AddEntityFrameworkStores<Data.DbContext>()
+                .AddDefaultTokenProviders();
+
+            
 
             services.AddTransient<DbInitializer>();
 
@@ -34,11 +45,11 @@ namespace iis
             Configuration.GetSection(ConfigurationOptions.Configuration).Bind(configurationOptions);
             if (configurationOptions.Database.DatabaseProvider == DatabaseProvider.PostgreSQL)
             {
-                services.AddTransient<iisContext, PostgreSqlDbContext>(_ => new PostgreSqlDbContext(configurationOptions.Database.PostgresConnectionString));
+                services.AddTransient<Data.DbContext, PostgreSqlDbContext>(_ => new PostgreSqlDbContext(configurationOptions.Database.PostgresConnectionString));
             }
             else
             {
-                services.AddTransient<iisContext, SqliteIISDbContext>(_ =>
+                services.AddTransient<Data.DbContext, SqliteIISDbContext>(_ =>
                 {
                     var pathRootDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "iis-server");
                     if (!Directory.Exists(pathRootDirectory))
@@ -47,11 +58,25 @@ namespace iis
                     }
 
                     var dbPath = Path.Combine(pathRootDirectory, "iis.db");
+                    
                     return new SqliteIISDbContext($"Data Source={dbPath}");
                 });
             }
 
-            /*services.ConfigureApplicationCookie(options =>
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+
+                // User settings
+                options.User.RequireUniqueEmail = false;
+            });
+
+            services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
                 options.Cookie.Name = "UserIdentification";
@@ -62,12 +87,29 @@ namespace iis
                 options.SlidingExpiration = true;
             });
 
-            services.AddHttpClient();*/
+            services.AddHttpClient();
+
+            services.AddRazorPages()
+                .AddRazorRuntimeCompilation();
+
+            // add policeies for authorization
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole",
+                    policy => policy.RequireRole("Admin"));
+                options.AddPolicy("RequireCaretakerRole",
+                    policy => policy.RequireRole("Caretaker"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbInitializer dbInitializer)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -84,6 +126,7 @@ namespace iis
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -92,8 +135,21 @@ namespace iis
                 endpoints.MapRazorPages();
             });
 
+            var configurationOptions = new ConfigurationOptions();
+            Configuration.GetSection(ConfigurationOptions.Configuration).Bind(configurationOptions);
+
             dbInitializer.Migrate();
+            
+            //TODO generuje databázy znovu a znovu => jak funguje databáze a smazat to!!
+            dbInitializer.SeedRoles();
+            // //TODO change password to secret
+            dbInitializer.SeedAdminUser("password");
+            dbInitializer.SeedUser();
             dbInitializer.SeedAnimals();
+            dbInitializer.SeedPhotos();
+            dbInitializer.SeedVeterinaryRecords();
+            dbInitializer.SeedWalks();
+            
         }
     }
 }

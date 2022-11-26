@@ -1,0 +1,106 @@
+﻿@page "{id:Guid}"
+@model iis.Pages.Animals.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Animal</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Animal.Id" />
+            <div class="form-group">
+                <label asp-for="Animal.ChipNumber" class="control-label"></label>
+                <input asp-for="Animal.ChipNumber" class="form-control" />
+                <span asp-validation-for="Animal.ChipNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Animal.Name" class="control-label"></label>
+                <input asp-for="Animal.Name" class="form-control" />
+                <span asp-validation-for="Animal.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Animal.Breed" class="control-label"></label>
+                <input asp-for="Animal.Breed" class="form-control" />
+                <span asp-validation-for="Animal.Breed" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Animal.Gender" class="control-label"></label>
+                <select asp-for="Animal.Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control"></select>
+                <span asp-validation-for="Animal.Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Animal.Birth" class="control-label"></label>
+                <input asp-for="Animal.Birth" class="form-control" />
+                <span asp-validation-for="Animal.Birth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Animal.DateOfArrival" class="control-label"></label>
+                <input asp-for="Animal.DateOfArrival" class="form-control" />
+                <span asp-validation-for="Animal.DateOfArrival" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Animal.Size" class="control-label"></label>
+                <select asp-for="Animal.Size" asp-items="Html.GetEnumSelectList<Size>()" class="form-control"></select>
+                <span asp-validation-for="Animal.Size" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Animal.About" class="control-label"></label>
+                <input asp-for="Animal.About" class="form-control" />
+                <span asp-validation-for="Animal.About" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Animal.Reserved" /> @Html.DisplayNameFor(model => model.Animal.Reserved)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Animal.Friendly" class="control-label"></label>
+                <select asp-for="Animal.Friendly" asp-items="Html.GetEnumSelectList<Friendly>()" class="form-control"></select>
+                <span asp-validation-for="Animal.Friendly" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Animal.ForBeginners" /> @Html.DisplayNameFor(model => model.Animal.ForBeginners)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Animal.Territory" class="control-label"></label>
+                <select asp-for="Animal.Territory" asp-items="Html.GetEnumSelectList<Territory>()" class="form-control"></select>
+                <span asp-validation-for="Animal.Territory" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Photo" class="control-label">Photo url to add:</label>
+                <input asp-for="Photo" class="form-control" />
+            </div>
+            <table class="table">
+                @foreach (var item in Model.Animal.Photos) {
+                    <tr>
+                        <td>
+                            <img src="@Html.DisplayFor(modelItem => item.Source)" height="100"/>
+                        </td>
+                        <td>
+                            <a asp-page="./PhotoDelete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

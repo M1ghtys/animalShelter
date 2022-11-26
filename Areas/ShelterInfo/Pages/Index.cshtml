@@ -1,0 +1,78 @@
+﻿@page
+@model iis.Areas.ShelterInfo.Pages.IndexModel
+
+@{
+    ViewData["Title"] = "ShelterInfo";
+    string[] daysofweek = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+}
+
+<h1>
+    Our Animal Shelter
+</h1>
+<p class=mt-3>
+    At our animal shelter we are all about sheltering the animals
+</p>
+
+<h4 class=mt-5>
+    Contact information
+</h4>
+<hr />
+<div class=mt-3>
+    <dl class="row">
+        <dt class=col-sm-2>
+                Phone number
+        </dt>
+        <dd class=col-sm-10>
+                +420 123 456 789
+        </dd>
+        <dt class=col-sm-2>
+                E-mail
+        </dt>
+        <dd class=col-sm-10>
+                animal@ShelterInfo.com
+        </dd>
+        <dt class=col-sm-2>
+                Address
+        </dt>
+        <dd class=col-sm-10>
+                74 Reppert Coal Road, Mount Clemens, Michigan    48045
+        </dd>
+    </dl>
+</div>
+
+<h4 class=mt-5>
+    Open Hours
+</h4>
+<hr />
+<div class=mt-3>
+    <dl class="row">
+        @foreach(var day in daysofweek)
+        {
+            <dt class=col-sm-2>
+                @day
+            </dt>
+            <dd class=col-sm-10>
+                8:00 - 16:00
+            </dd>
+        }
+        <dt class=col-sm-2>
+            Sunday
+        </dt>
+        <dd class=col-sm-10>
+            Closed
+        </dd>
+    </dl>
+</div>
+
+<h4 class=mt-5>
+    We welcome you to help walk our animals
+</h4>
+<hr />
+<div class=mt-3>
+    <ul>
+        <li>Register for volunteer position at our shelter</li>
+        <li>Book a walk with one of the animals</li>
+        <li>Come to the shelter to finish you registration</li>
+        <li>And take the animal for walk!</li>
+    </ul>
+</div>

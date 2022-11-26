@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace iis.Models
@@ -32,7 +34,7 @@ namespace iis.Models
 
     public class Animal
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string ChipNumber { get; set; }
         public string Name { get; set; }
         public string Breed { get; set; }
@@ -45,5 +47,14 @@ namespace iis.Models
         public Friendly Friendly { get; set; }
         public bool ForBeginners { get; set; }
         public Territory Territory { get; set; }
+        public bool Tattoo { get; set; }
+        public bool Castration { get; set; }
+        public bool Vaccinated { get; set; }
+        public bool Handicapped { get; set; }
+        public string Comment { get; set; }
+        
+        public ICollection<Walk> Walks { get; set; } = new Collection<Walk>();
+        public ICollection<Photo> Photos { get; set; } = new Collection<Photo>();
+        public ICollection<VeterinaryRecord> VeterinaryRecords { get; set; } = new Collection<VeterinaryRecord>();
     }
 }
