@@ -24,7 +24,7 @@ namespace iis.Pages.Animals
 
         public Animal Animal { get; set; }
         
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(Guid? id)
         {
             if (id == null || !_facade.AnimalExists(id))
             {
@@ -33,7 +33,6 @@ namespace iis.Pages.Animals
 
             Animal = await _context.Animal.FirstOrDefaultAsync(m => m.Id == id);
             Animal.Photos = _context.Photo.Where(m => m.AnimalId == Animal.Id).ToList();
-            Animal.HealthCondition = _context.HealthCondition.FirstOrDefault(m => m.AnimalId == Animal.Id);
 
             if (Animal == null)
             {

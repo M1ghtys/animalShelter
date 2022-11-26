@@ -29,7 +29,7 @@ namespace iis.Pages.Animals
         [BindProperty]
         public string Photo { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(Guid? id)
         {
             if (id == null || !_facade.AnimalExists(id))
             {

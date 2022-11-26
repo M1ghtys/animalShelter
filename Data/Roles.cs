@@ -5,8 +5,10 @@ namespace iis.Data
     public enum Role
     {
         Admin,
-        Worker,
-        Volunteer
+        Caretaker,
+        Vet,
+        VerifiedUser,
+        UnverifiedUser
     }
 
     public static class Roles
@@ -14,8 +16,10 @@ namespace iis.Data
         private static readonly Dictionary<Role, string> _roles = new Dictionary<Role, string>()
         {
             { Role.Admin,  "Admin" },
-            { Role.Worker,  "Worker" },
-            { Role.Volunteer, "Volunteer" },
+            { Role.Caretaker,  "Caretaker" },
+            { Role.Vet, "Vet" },
+            { Role.VerifiedUser, "VerifiedUser" },
+            { Role.UnverifiedUser, "UnverifiedUser" }
         };
 
         public static IReadOnlyDictionary<Role, string> GetRoles() => _roles;

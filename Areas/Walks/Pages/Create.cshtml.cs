@@ -20,6 +20,8 @@ namespace iis.Pages.Walks
         
         [BindProperty]
         public IList<Animal> Animals { get; set; }
+        [BindProperty]
+        public IList<User> Users { get; set; }
 
         public CreateModel(iis.Data.DbContext context)
         {
@@ -28,20 +30,18 @@ namespace iis.Pages.Walks
 
         public IActionResult OnGet()
         {
-            Animals = _context.Animal.ToList();
-            
+            LoadData();
             return Page();
         }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
+            Walk.Id = Guid.NewGuid();
 
-            //TODO debug => smazat, nejede kvůli GUID
-            //Walk.VolunteerId = _context.Volunteer.First().Id; 
-
-            if (!ModelState.IsValid)
+            if (Walk == null)
             {
+                LoadData();
                 return Page();
             }
 
@@ -49,6 +49,12 @@ namespace iis.Pages.Walks
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
+        }
+
+        void LoadData()
+        {
+            Animals = _context.Animal.ToList();
+            Users = _context.Users.ToList();
         }
     }
 }

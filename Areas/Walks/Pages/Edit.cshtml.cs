@@ -26,8 +26,14 @@ namespace iis.Pages.Walks
         [BindProperty]
         public Walk Walk { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        [BindProperty]
+        public IList<Animal> Animals { get; set; }
+        [BindProperty]
+        public IList<User> Users { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(Guid? id)
         {
+            LoadData();
             if (id == null || !_facade.WalkExists(id))
             {
                 return NotFound();
@@ -70,6 +76,12 @@ namespace iis.Pages.Walks
             }
 
             return RedirectToPage("./Index");
+        }
+
+        void LoadData()
+        {
+            Animals = _context.Animal.ToList();
+            Users = _context.Users.ToList();
         }
     }
 }

@@ -36,17 +36,7 @@ namespace iis.Pages.Animals
             }
 
             _context.Animal.Add(Animal);
-            HealthCondition hc = new HealthCondition()
-            {
-                Animal = Animal,
-                AnimalId = Animal.Id,
-                Castration = false,
-                Handicapped = false,
-                Tattoo = false,
-                Vaccinated = false,
-                Others = ""
-            };
-            _context.HealthCondition.Add(hc);
+
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

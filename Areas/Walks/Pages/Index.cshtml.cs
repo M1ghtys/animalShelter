@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using iis.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace iis.Pages.Walks   //TODO => změnit namespaces??
+namespace iis.Pages.Walks
 {
     [Authorize]
     public class IndexModel : PageModel
@@ -25,8 +26,13 @@ namespace iis.Pages.Walks   //TODO => změnit namespaces??
             foreach (var w in Walks)
             {
                 w.Animal = await _context.Animal.FirstOrDefaultAsync(a => a.Id == w.AnimalId);
-                //w.Volunteer = await _context.Volunteer.FirstOrDefaultAsync(v => v.Id == w.VolunteerId);   //TODO Volunteer dědí z Usera Id typu GUID!? => změnit všechny Id na Guid??
+                w.User = await _context.Users.FirstOrDefaultAsync(v => v.Id == w.UserId.ToString());
             }
+        }
+
+        public IActionResult OnPostCreate()
+        {
+            return RedirectToPage("Create");
         }
     }
 }

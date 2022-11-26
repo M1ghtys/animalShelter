@@ -73,6 +73,26 @@
                 <select asp-for="Animal.Territory" asp-items="Html.GetEnumSelectList<Territory>()" class="form-control"></select>
                 <span asp-validation-for="Animal.Territory" class="text-danger"></span>
             </div>
+	        <div class="form-group form-check">
+		        <label class="form-check-label">
+			        <input class="form-check-input" asp-for="Animal.Tattoo" /> @Html.DisplayNameFor(model => model.Animal.Tattoo)
+		        </label>
+	        </div>
+	        <div class="form-group form-check">
+		        <label class="form-check-label">
+			        <input class="form-check-input" asp-for="Animal.Castration" /> @Html.DisplayNameFor(model => model.Animal.Castration)
+		        </label>
+	        </div>
+	        <div class="form-group form-check">
+		        <label class="form-check-label">
+			        <input class="form-check-input" asp-for="Animal.Handicapped" /> @Html.DisplayNameFor(model => model.Animal.Handicapped)
+		        </label>
+	        </div>
+	        <div class="form-group form-check">
+		        <label class="form-check-label">
+			        <input class="form-check-input" asp-for="Animal.Vaccinated" /> @Html.DisplayNameFor(model => model.Animal.Vaccinated)
+		        </label>
+	        </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -5,11 +5,20 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class=row>
+    <div class=col-sm-8>
+        <h1>List of walks</h1>
+    </div>
+    <div class=col-sm-4 align=right>
+        <p>
+            <form method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" asp-page-handler="Create">Create New</button>
+            </form>
+        </p>
+    </div>
+</div>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -42,7 +51,7 @@
                     @Html.DisplayFor(modelItem => item.Animal.Name)
             </td>
             <td>
-                    @Html.DisplayFor(modelItem => item.Volunteer.Name)
+                    @Html.DisplayFor(modelItem => item.User.Name)
             </td>
             <td>
                     @Html.DisplayFor(modelItem => item.StartTime)
@@ -57,8 +66,8 @@
                     @Html.DisplayFor(modelItem => item.Comment)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
                 <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
