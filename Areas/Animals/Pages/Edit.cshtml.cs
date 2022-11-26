@@ -76,6 +76,10 @@ namespace iis.Pages.Animals
                 {
                     return NotFound();
                 }
+                else
+                {
+                    throw;
+                }
             }
 
             return RedirectToPage("./Index");

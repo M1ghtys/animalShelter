@@ -3,7 +3,6 @@ using iis.Data.Content;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using System;
-using iis.Facades;
 
 namespace iis.Data
 {
@@ -12,16 +11,12 @@ namespace iis.Data
         private readonly DbContext _dbContext;
         private readonly UserManager<Models.User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly AnimalFacade _animalFacade;
-        private readonly WalkFacade _walkFacade;
 
         public DbInitializer(DbContext dbcontext, UserManager<iis.Models.User> userManager, RoleManager<IdentityRole> roleManager)
         {
             _dbContext = dbcontext;
             _userManager = userManager;
             _roleManager = roleManager;
-            _animalFacade = new AnimalFacade(dbcontext);
-            _walkFacade = new WalkFacade(dbcontext);
         }
 
         public void Migrate() => _dbContext.Database.Migrate();
@@ -46,26 +41,27 @@ namespace iis.Data
 
         public void SeedAdminUser(string password)
         {
-            if (_dbContext.Users.Any())
-            {
-                return;
-            }
+            var AdminId = "92b2f5f0-84f0-44cb-a760-9bfcc215c63a";
+
+            if (_dbContext.Users.Any(a => a.Id == AdminId)) return;
 
             var admin = new Models.User
             {
-                Id = "92b2f5f0-84f0-44cb-a760-9bfcc215c63a",
+                Id = AdminId,
                 UserName = "admin",
                 Email = "admin@example.com",
                 EmailConfirmed = true,
                 LockoutEnabled = false,
             };
 
+
             var result = _userManager.CreateAsync(admin, password).Result;
             if (result.Succeeded)
             {
                 result = _userManager.AddToRoleAsync(admin, Roles.GetRoles()[Role.Admin]).Result;
             }
-            else
+
+            if (!result.Succeeded)
             {
                 throw new InvalidOperationException("Initial db with admin failed");
             }
@@ -85,7 +81,8 @@ namespace iis.Data
                     {
                         result = _userManager.AddToRoleAsync(x, Roles.GetRoles()[Role.UnverifiedUser]).Result;
                     }
-                    else
+
+                    if (!result.Succeeded)
                     {
                         throw new InvalidOperationException("Initial db with UnverifiedUser failed");
                     }
@@ -103,7 +100,7 @@ namespace iis.Data
                     {
                         result = _userManager.AddToRoleAsync(x, Roles.GetRoles()[Role.VerifiedUser]).Result;
                     }
-                    else
+                    if (!result.Succeeded)
                     {
                         throw new InvalidOperationException("Initial db with VerifiedUser failed");
                     }
@@ -121,7 +118,7 @@ namespace iis.Data
                     {
                         result = _userManager.AddToRoleAsync(x, Roles.GetRoles()[Role.Vet]).Result;
                     }
-                    else
+                    if (!result.Succeeded)
                     {
                         throw new InvalidOperationException("Initial db with Vet failed");
                     }
@@ -139,7 +136,7 @@ namespace iis.Data
                     {
                         result = _userManager.AddToRoleAsync(x, Roles.GetRoles()[Role.Caretaker]).Result;
                     }
-                    else
+                    if (!result.Succeeded)
                     {
                         throw new InvalidOperationException("Initial db with Caretaker failed");
                     }
