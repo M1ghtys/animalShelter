@@ -2,7 +2,7 @@
 @model iis.Pages.Animals.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Animals";
 }
 
 <div class=row>
@@ -32,10 +32,14 @@
                 @Html.DisplayNameFor(model => model.Animal[0].Gender)
             </th>
             <th>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.BirthSort">
                 @Html.DisplayNameFor(model => model.Animal[0].Birth)
+                </a>
             </th>
             <th>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.DateOASort">
                 @Html.DisplayNameFor(model => model.Animal[0].DateOfArrival)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Animal[0].Size)

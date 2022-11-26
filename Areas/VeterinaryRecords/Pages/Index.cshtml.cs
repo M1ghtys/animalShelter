@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace iis.Pages.VeterinaryRecords
 {
-    [Authorize]
+    [Authorize(Policy = "RequireCaretakerRole")]
     public class IndexModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
@@ -21,11 +21,37 @@ namespace iis.Pages.VeterinaryRecords
             _context = context;
         }
 
-        public IList<VeterinaryRecord> VeterinaryRecord { get;set; }
+        public string AnimalIDSort { get; set; }
+        public string DateSort { get; set; }
 
-        public async Task OnGetAsync()
+        public IList<VeterinaryRecord> VeterinaryRecord { get; set; }
+
+        public async Task OnGetAsync(string sortOrder)
         {
-            VeterinaryRecord = await _context.VeterinaryRecord.ToListAsync();
+            // using System;
+            AnimalIDSort = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+            DateSort = sortOrder == "Date" ? "Date_desc" : "Date";
+
+            IQueryable<VeterinaryRecord> VetRecOrder = from s in _context.VeterinaryRecord
+                                         select s;
+
+            switch (sortOrder)
+            {
+                case "id_desc":
+                    VetRecOrder = VetRecOrder.OrderByDescending(s => s.AnimalId);
+                    break;
+                case "Date":
+                    VetRecOrder = VetRecOrder.OrderBy(s => s.Date);
+                    break;
+                case "Date_desc":
+                    VetRecOrder = VetRecOrder.OrderByDescending(s => s.Date);
+                    break;
+                default:
+                    VetRecOrder = VetRecOrder.OrderBy(s => s.AnimalId);
+                    break;
+            }
+
+            VeterinaryRecord = await VetRecOrder.AsNoTracking().ToListAsync();
         }
     }
 }

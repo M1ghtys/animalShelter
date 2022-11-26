@@ -2,13 +2,13 @@
 @model iis.Pages.Walks.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Walks";
 }
 
-<h1>Index</h1>
+<h1>Take our animals for walk!</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <a asp-page="Create">Create walk</a>
 </p>
 <table class="table">
     <thead>
@@ -20,7 +20,9 @@
                 @Html.DisplayNameFor(model => model.Walk[0].VolunteerId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Walk[0].StartTime)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.StartTimeSort">
+                    @Html.DisplayNameFor(model => model.Walk[0].StartTime)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Walk[0].FinishTime)

@@ -21,11 +21,40 @@ namespace iis.Pages.Walks
             _context = context;
         }
 
-        public IList<Walk> Walk { get;set; }
+        public string StartTimeSort { get; set; }
+        public string FinishTimeSort { get; set; }
+        public string StateSort { get; set; }
+        public string CurrentFilter { get; set; }
+        public string CurrentSort { get; set; }
 
-        public async Task OnGetAsync()
+        public IList<Walk> Walk { get; set; }
+
+        public async Task OnGetAsync(string sortOrder)
         {
-            Walk = await _context.Walk.ToListAsync();
-        }
+            // using System;
+            StartTimeSort = String.IsNullOrEmpty(sortOrder) ? "time_desc" : "";
+            StateSort = sortOrder == "State" ? "State_desc" : "State";
+
+            IQueryable<Walk> walkOrder = from s in _context.Walk
+                                         select s;
+
+            switch (sortOrder)
+            {
+                case "time_desc":
+                    walkOrder = walkOrder.OrderByDescending(s => s.StartTime);
+                    break;
+                case "State":
+                    walkOrder = walkOrder.OrderBy(s => s.State);
+                    break;
+                case "State_desc":
+                    walkOrder = walkOrder.OrderByDescending(s => s.State);
+                    break;
+                default:
+                    walkOrder = walkOrder.OrderBy(s => s.StartTime);
+                    break;
+            }
+
+            Walk = await walkOrder.AsNoTracking().ToListAsync();
+        }   
     }
 }
