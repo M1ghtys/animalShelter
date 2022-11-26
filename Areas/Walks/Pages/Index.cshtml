@@ -5,19 +5,28 @@
     ViewData["Title"] = "Walks";
 }
 
-<h1>Take our animals for walk!</h1>
+<div class=row>
+    <div class=col-sm-8>
+        <h1>List of walks</h1>
+    </div>
+    <div class=col-sm-4 align=right>
+        <p>
+            <form method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" asp-page-handler="Create">Create New</button>
+            </form>
+        </p>
+    </div>
+</div>
 
-<p>
-    <a asp-page="Create">Create walk</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Walk[0].AnimalId)
+                Animal Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Walk[0].VolunteerId)
+                Volunteer Name
             </th>
             <th>
                 <a asp-page="./Index" asp-route-sortOrder="@Model.StartTimeSort">
@@ -25,26 +34,26 @@
                 </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Walk[0].FinishTime)
+                @Html.DisplayNameFor(model => model.Walks[0].FinishTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Walk[0].State)
+                @Html.DisplayNameFor(model => model.Walks[0].State)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Walk[0].Comment)
+                @Html.DisplayNameFor(model => model.Walks[0].Comment)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Walk)
+        @foreach (var item in Model.Walks)
         {
         <tr>
             <td>
-                    @Html.DisplayFor(modelItem => item.AnimalId)
+                    @Html.DisplayFor(modelItem => item.Animal.Name)
             </td>
             <td>
-                    @Html.DisplayFor(modelItem => item.VolunteerId)
+                    @Html.DisplayFor(modelItem => item.User.Name)
             </td>
             <td>
                     @Html.DisplayFor(modelItem => item.StartTime)
@@ -59,8 +68,8 @@
                     @Html.DisplayFor(modelItem => item.Comment)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
                 <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>

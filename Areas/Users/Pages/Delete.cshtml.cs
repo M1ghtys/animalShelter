@@ -8,51 +8,53 @@ using Microsoft.EntityFrameworkCore;
 using iis.Data;
 using iis.Models;
 using iis.Facades;
+using Microsoft.AspNetCore.Identity;
 
-namespace iis.Pages.Volunteers
+namespace iis.Pages.Users
 {
     public class DeleteModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
-        private readonly VolunteerFacade _facade;
+        private readonly UserFacade _facade;
 
-        public DeleteModel(iis.Data.DbContext context)
+        public DeleteModel(iis.Data.DbContext context, UserManager<iis.Models.User> userManager)
         {
             _context = context;
-            _facade = new VolunteerFacade(context);
+            _facade = new UserFacade(context, userManager);
         }
 
         [BindProperty]
-        public Volunteer Volunteer { get; set; }
+        public User User { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(Guid? id)
         {
-            if (id == null || !_facade.VolunteerExists(id))
+            if (id == null || !_facade.UserExists(id))
+            {
+                return NotFound();
+            }
+            
+            User = await _context.Users.FirstOrDefaultAsync(m => m.Id == id.ToString());
+
+            if (User == null)
             {
                 return NotFound();
             }
 
-            Volunteer = await _context.Volunteer.FirstOrDefaultAsync(m => m.Id == id.ToString());
-
-            if (Volunteer == null)
-            {
-                return NotFound();
-            }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(Guid? id)
         {
-            if (id == null || !_facade.VolunteerExists(id))
+            if (id == null || !_facade.UserExists(id))
             {
                 return NotFound();
             }
 
-            Volunteer = await _context.Volunteer.FindAsync(id);
+            User = await _context.Users.FindAsync(id.ToString());
 
-            if (Volunteer != null)
+            if (User != null)
             {
-                _context.Volunteer.Remove(Volunteer);
+                _context.Users.Remove(User);
                 await _context.SaveChangesAsync();
             }
 

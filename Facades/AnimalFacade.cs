@@ -1,4 +1,5 @@
-﻿using iis.Models;
+﻿using System;
+using iis.Models;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ namespace iis.Facades
             _context = context;
         }
 
-        public bool AnimalExists(int? id)
+        public bool AnimalExists(Guid? id)
         {
             return _context.Animal.Any(e => e.Id == id);
         }

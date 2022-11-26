@@ -27,9 +27,7 @@ namespace iis
         }
 
         public IConfiguration Configuration { get; }
-
-        private bool NewDbCreated = false;
-
+        
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -60,9 +58,7 @@ namespace iis
                     }
 
                     var dbPath = Path.Combine(pathRootDirectory, "iis.db");
-
-                    if (!File.Exists(dbPath)) NewDbCreated = true;
-
+                    
                     return new SqliteIISDbContext($"Data Source={dbPath}");
                 });
             }
@@ -143,21 +139,17 @@ namespace iis
             Configuration.GetSection(ConfigurationOptions.Configuration).Bind(configurationOptions);
 
             dbInitializer.Migrate();
-
-
+            
+            //TODO generuje databázy znovu a znovu => jak funguje databáze a smazat to!!
             dbInitializer.SeedRoles();
-            //TODO change password to secret
+            // //TODO change password to secret
             dbInitializer.SeedAdminUser("password");
+            dbInitializer.SeedUser();
             dbInitializer.SeedAnimals();
-            dbInitializer.SeedEmployees();
-            //dbInitializer.SeedHealthConditions();
-            dbInitializer.SeedOccupations();
             dbInitializer.SeedPhotos();
             dbInitializer.SeedVeterinaryRecords();
-            //dbInitializer.SeedVolunteers();
             dbInitializer.SeedWalks();
-
-
+            
         }
     }
 }

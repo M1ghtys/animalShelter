@@ -21,50 +21,50 @@
 
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Breed)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Gender)
-            </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.BirthSort">
-                @Html.DisplayNameFor(model => model.Animal[0].Birth)
-                </a>
-            </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.DateOASort">
-                @Html.DisplayNameFor(model => model.Animal[0].DateOfArrival)
-                </a>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Size)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].About)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Reserved)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Friendly)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].ForBeginners)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Animal[0].Territory)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Breed)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Gender)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Birth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].DateOfArrival)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Size)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].About)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Reserved)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Friendly)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].ForBeginners)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Animals[0].Territory)
+        </th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Animal) {
+@foreach (var item in Model.Animals) {
         <tr>
+            <td>
+                <img src="@Html.DisplayFor(modelItem => item.Photos.First().Source)" height="80"/>
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>

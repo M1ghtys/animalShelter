@@ -25,7 +25,7 @@ namespace iis.Pages.Walks
         [BindProperty]
         public Walk Walk { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(Guid? id)
         {
             if (id == null || !_facade.WalkExists(id))
             {
@@ -33,6 +33,8 @@ namespace iis.Pages.Walks
             }
 
             Walk = await _context.Walk.FirstOrDefaultAsync(m => m.Id == id);
+            Walk.User = await _context.Users.FirstOrDefaultAsync(m => m.Id == Walk.UserId.ToString());
+            Walk.Animal = await _context.Animal.FirstOrDefaultAsync(m => m.Id == Walk.AnimalId);
 
             if (Walk == null)
             {
@@ -41,7 +43,7 @@ namespace iis.Pages.Walks
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(Guid? id)
         {
             if (id == null || !_facade.WalkExists(id))
             {

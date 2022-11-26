@@ -41,18 +41,19 @@ namespace iis.Data
 
         public void SeedAdminUser(string password)
         {
-            if (_dbContext.Users.Any())
-            {
-                return;
-            }
+            var AdminId = "92b2f5f0-84f0-44cb-a760-9bfcc215c63a";
+
+            if (_dbContext.Users.Any(a => a.Id == AdminId)) return;
 
             var admin = new Models.User
             {
+                Id = AdminId,
                 UserName = "admin",
                 Email = "admin@example.com",
                 EmailConfirmed = true,
                 LockoutEnabled = false,
             };
+
 
             var result = _userManager.CreateAsync(admin, password).Result;
             if (result.Succeeded)
@@ -66,51 +67,134 @@ namespace iis.Data
             }
         }
 
+        public void SeedUser()
+        {
+
+            var listUU = UserList.GetUnverifiedUsers();
+            foreach (var x in listUU)
+            {
+                if (!_dbContext.Users.Any(a => a.Id == x.Id))
+                {
+                    _dbContext.Users.Add(x);
+                    var result = _userManager.CreateAsync(x, "useruser").Result;
+                    if (result.Succeeded)
+                    {
+                        result = _userManager.AddToRoleAsync(x, Roles.GetRoles()[Role.UnverifiedUser]).Result;
+                    }
+
+                    if (!result.Succeeded)
+                    {
+                        throw new InvalidOperationException("Initial db with UnverifiedUser failed");
+                    }
+                }
+            }
+
+            var listVU = UserList.GetVerifiedUsers();
+            foreach (var x in listVU)
+            {
+                if (!_dbContext.Users.Any(a => a.Id == x.Id))
+                {
+                    _dbContext.Users.Add(x);
+                    var result = _userManager.CreateAsync(x, "useruser").Result;
+                    if (result.Succeeded)
+                    {
+                        result = _userManager.AddToRoleAsync(x, Roles.GetRoles()[Role.VerifiedUser]).Result;
+                    }
+                    if (!result.Succeeded)
+                    {
+                        throw new InvalidOperationException("Initial db with VerifiedUser failed");
+                    }
+                }
+            }
+
+            var listV = UserList.GetVets();
+            foreach (var x in listV)
+            {
+                if (!_dbContext.Users.Any(a => a.Id == x.Id))
+                {
+                    _dbContext.Users.Add(x);
+                    var result = _userManager.CreateAsync(x, "useruser").Result;
+                    if (result.Succeeded)
+                    {
+                        result = _userManager.AddToRoleAsync(x, Roles.GetRoles()[Role.Vet]).Result;
+                    }
+                    if (!result.Succeeded)
+                    {
+                        throw new InvalidOperationException("Initial db with Vet failed");
+                    }
+                }
+            }
+
+            var listCT = UserList.GetCareTakers();
+            foreach (var x in listCT)
+            {
+                if (!_dbContext.Users.Any(a => a.Id == x.Id))
+                {
+                    _dbContext.Users.Add(x);
+                    var result = _userManager.CreateAsync(x, "useruser").Result;
+                    if (result.Succeeded)
+                    {
+                        result = _userManager.AddToRoleAsync(x, Roles.GetRoles()[Role.Caretaker]).Result;
+                    }
+                    if (!result.Succeeded)
+                    {
+                        throw new InvalidOperationException("Initial db with Caretaker failed");
+                    }
+                }
+            }
+
+            _dbContext.SaveChanges();
+        }
+
         public void SeedAnimals()
         {
-            _dbContext.Animal.AddRange(AnimalsList.GetAnimals());
+            var list = AnimalsList.GetAnimals();
+            foreach (var x in list)
+            {
+                if (!_dbContext.Animal.Any(a => a.Id == x.Id))
+                {
+                    _dbContext.Animal.Add(x);
+                }
+            }
             _dbContext.SaveChanges();
         }
-
-        public void SeedEmployees()
-        {
-            _dbContext.Employee.AddRange(EmployeesList.GetEmployees());
-            _dbContext.SaveChanges();
-        }
-
-        public void SeedHealthConditions()
-        {
-            _dbContext.HealthCondition.AddRange(HealthConditionsList.GetHealthConditions());
-            _dbContext.SaveChanges();
-        }
-
-        public void SeedOccupations()
-        {
-            _dbContext.Occupation.AddRange(OccupationsList.GetOccupations());
-            _dbContext.SaveChanges();
-        }
-
+        
         public void SeedPhotos()
         {
-            _dbContext.Photo.AddRange(PhotosList.GetPhotos());
+            var list = PhotosList.GetPhotos();
+            foreach (var x in list)
+            {
+                if (!_dbContext.Photo.Any(a => a.Id == x.Id))
+                {
+                    _dbContext.Photo.Add(x);
+                }
+            }
             _dbContext.SaveChanges();
         }
 
         public void SeedVeterinaryRecords()
         {
-            _dbContext.VeterinaryRecord.AddRange(VeterinaryRecordsList.GetVeterinaryRecords());
-            _dbContext.SaveChanges();
-        }
-        
-        public void SeedVolunteers()
-        {
-            _dbContext.Volunteer.AddRange(VolunteersList.GetVolunteers());
+            var list = VeterinaryRecordsList.GetVeterinaryRecords();
+            foreach (var x in list)
+            {
+                if (!_dbContext.VeterinaryRecord.Any(a => a.Id == x.Id))
+                {
+                    _dbContext.VeterinaryRecord.Add(x);
+                }
+            }
             _dbContext.SaveChanges();
         }
 
         public void SeedWalks()
         {
-            _dbContext.Walk.AddRange(WalksList.GetWalks());
+            var list = WalksList.GetWalks();
+            foreach (var x in list)
+            {
+                if (!_dbContext.Walk.Any(a => a.Id == x.Id))
+                {
+                    _dbContext.Walk.Add(x);
+                }
+            }
             _dbContext.SaveChanges();
         }
     }

@@ -17,8 +17,11 @@ namespace iis.Pages.Walks
 
         [BindProperty]
         public Walk Walk { get; set; }
+        
         [BindProperty]
-        public Volunteer Volunteer { get; set; }
+        public IList<Animal> Animals { get; set; }
+        [BindProperty]
+        public IList<User> Users { get; set; }
 
         public CreateModel(iis.Data.DbContext context)
         {
@@ -27,14 +30,18 @@ namespace iis.Pages.Walks
 
         public IActionResult OnGet()
         {
+            LoadData();
             return Page();
         }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            Walk.Id = Guid.NewGuid();
+
+            if (Walk == null)
             {
+                LoadData();
                 return Page();
             }
 
@@ -42,6 +49,12 @@ namespace iis.Pages.Walks
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
+        }
+
+        void LoadData()
+        {
+            Animals = _context.Animal.ToList();
+            Users = _context.Users.ToList();
         }
     }
 }

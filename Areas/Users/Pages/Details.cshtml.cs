@@ -8,34 +8,35 @@ using Microsoft.EntityFrameworkCore;
 using iis.Data;
 using iis.Models;
 using iis.Facades;
+using Microsoft.AspNetCore.Identity;
 
-namespace iis.Pages.Walks
+namespace iis.Pages.Users
 {
     public class DetailsModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
-        private readonly WalkFacade _facade;
+        private readonly UserFacade _facade;
 
-        public DetailsModel(iis.Data.DbContext context)
+        public DetailsModel(iis.Data.DbContext context, UserManager<iis.Models.User> userManager)
         {
             _context = context;
-            _facade = new WalkFacade(context);
+            _facade = new UserFacade(context, userManager);
         }
 
-        public Walk Walk { get; set; }
+        public User User { get; set; }
+        public Role Role { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
-            if (id == null || !_facade.WalkExists(id))
+            if (id == null || !_facade.UserExists(id))
             {
                 return NotFound();
             }
-
-            Walk = await _context.Walk.FirstOrDefaultAsync(m => m.Id == id);
-            Walk.User = await _context.Users.FirstOrDefaultAsync(m => m.Id == Walk.UserId.ToString());
-            Walk.Animal = await _context.Animal.FirstOrDefaultAsync(m => m.Id == Walk.AnimalId);
-
-            if (Walk == null)
+            
+            User = await _context.Users.FirstOrDefaultAsync(m => m.Id == id.ToString());
+            Role = await _facade.GetUserRoleAsync(id);
+            
+            if (User == null)
             {
                 return NotFound();
             }

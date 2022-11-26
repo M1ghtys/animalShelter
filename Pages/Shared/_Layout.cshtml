@@ -22,18 +22,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Animals" asp-page="/Index">Animals</a>
                         </li>
-                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Employees" asp-page="/Index">Employees</a>
-                            </li>
-                        }
-                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Occupations" asp-page="/Index">Occupations      </a>
-                            </li>
-                        }
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
@@ -45,6 +33,12 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="VeterinaryRecords" asp-page="/Index">Veterinary Records</a>
                             </li>
+                        }
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+	                        <li class="nav-item">
+		                        <a class="nav-link text-dark" asp-area="Users" asp-page="/Index">Users</a>
+	                        </li>
                         }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="ShelterInfo" asp-page="/Index">Shelter information</a>

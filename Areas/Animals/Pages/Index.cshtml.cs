@@ -21,14 +21,14 @@ namespace iis.Pages.Animals
             _context = context;
         }
 
-        public IList<Animal> Animal { get;set; }
+        public IList<Animal> Animals { get;set; }
 
         public string BirthSort { get; set; }
         public string DateOASort { get; set; }
 
         public async Task OnGetAsync(string sortOrder)
         {
-            // using System;
+
             BirthSort = String.IsNullOrEmpty(sortOrder) ? "birth_desc" : "";
             DateOASort = sortOrder == "DateOA" ? "DateOA_desc" : "DateOA";
 
@@ -51,7 +51,19 @@ namespace iis.Pages.Animals
                     break;
             }
 
-            Animal = await AnimalRecord.AsNoTracking().ToListAsync();
+            Animals = await AnimalRecord.AsNoTracking().ToListAsync();
+            foreach (var a in Animals)
+            {
+                a.Photos = _context.Photo.Where(p => p.AnimalId == a.Id).ToList();
+                if (!a.Photos.Any())
+                {
+                    a.Photos.Add(new Photo()
+                    {
+                        AnimalId = a.Id,
+                        Source = "https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png"
+                    });
+                }
+            }
         }
 
         public IActionResult OnPostCreate()

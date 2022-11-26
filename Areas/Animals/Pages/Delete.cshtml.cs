@@ -25,7 +25,7 @@ namespace iis.Pages.Animals
         [BindProperty]
         public Animal Animal { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(Guid? id)
         {
             if (id == null || !_facade.AnimalExists(id))
             {
@@ -41,7 +41,7 @@ namespace iis.Pages.Animals
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(Guid? id)
         {
             if (id == null || !_facade.AnimalExists(id))
             {

@@ -1,4 +1,4 @@
-﻿@page "{id:int}"
+﻿@page "{id:Guid}"
 @model iis.Pages.Walks.DetailsModel
 
 @{
@@ -12,16 +12,16 @@
     <hr />
     <dl class="row">
 	    <dt class="col-sm-2">
-		    @Html.DisplayNameFor(model => model.Walk.AnimalId)
+		    Animal Name
 	    </dt>
 	    <dd class="col-sm-10">
-		    @Html.DisplayFor(model => model.Walk.AnimalId)
+		    @Html.DisplayFor(model => model.Walk.Animal.Name)
 	    </dd>
 	    <dt class="col-sm-2">
-		    @Html.DisplayNameFor(model => model.Walk.VolunteerId)
+		    Volunteer Name
 	    </dt>
 	    <dd class="col-sm-10">
-		    @Html.DisplayFor(model => model.Walk.VolunteerId)
+		    @Html.DisplayFor(model => model.Walk.User.Name)
 	    </dd>
 	    <dt class="col-sm-2">
 		    @Html.DisplayNameFor(model => model.Walk.StartTime)

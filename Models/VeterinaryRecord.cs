@@ -5,8 +5,8 @@ namespace iis.Models
 {
     public class VeterinaryRecord
     {
-        public int Id { get; set; }
-        public int AnimalId { get; set; }
+        public Guid Id { get; set; }
+        public Guid AnimalId { get; set; }
         public Animal? Animal  { get; set; }
         public DateTime Date { get; set; }
         public double Weight { get; set; }

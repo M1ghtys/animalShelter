@@ -11,34 +11,33 @@ using iis.Facades;
 
 namespace iis.Pages.Animals
 {
-    public class DetailsModel : PageModel
+    public class PhotoDeleteModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
-        private readonly AnimalFacade _facade;
 
-        public DetailsModel(iis.Data.DbContext context)
+        public PhotoDeleteModel(iis.Data.DbContext context)
         {
             _context = context;
-            _facade = new AnimalFacade(context);
         }
 
-        public Animal Animal { get; set; }
-        
+        public Photo Photo { get; set; }
+
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
-            if (id == null || !_facade.AnimalExists(id))
+            if (id == null)
             {
                 return NotFound();
             }
 
-            Animal = await _context.Animal.FirstOrDefaultAsync(m => m.Id == id);
-            Animal.Photos = _context.Photo.Where(m => m.AnimalId == Animal.Id).ToList();
+            Photo = await _context.Photo.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Animal == null)
+            if (Photo != null)
             {
-                return NotFound();
+                _context.Photo.Remove(Photo);
+                await _context.SaveChangesAsync();
             }
-            return Page();
+            
+            return RedirectToPage("./Index");
         }
     }
 }

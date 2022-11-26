@@ -36,6 +36,7 @@ namespace iis.Pages.Animals
             }
 
             _context.Animal.Add(Animal);
+
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
