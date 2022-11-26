@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace iis.Pages.Animals
 {
-    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly iis.Data.DbContext _context;

@@ -29,10 +29,15 @@ namespace iis.Pages.Users
         public iis.Models.User User { get; set; }
         [BindProperty]
         public Role Role { get; set; }
+        [BindProperty]
+        public string Password { get; set; }
+        [BindProperty]
+        public bool UnverUser { get; set; }
 
 
         public IActionResult OnGet()
         {
+            Role = Role.UnverifiedUser;
             return Page();
         }
 
@@ -45,8 +50,18 @@ namespace iis.Pages.Users
             {
                 return Page();
             }
+
+            if (Password == null)
+            {
+                Password = "useruser";
+            }
+
+            if (UnverUser)
+            {
+                Role = Role.UnverifiedUser;
+            }
             
-            var result = _userManager.CreateAsync(User, "useruser").Result;
+            var result = _userManager.CreateAsync(User, Password).Result;
             if (result.Succeeded)
             {
                 result = _userManager.AddToRoleAsync(User, Roles.GetRoles()[Role]).Result;
@@ -60,7 +75,10 @@ namespace iis.Pages.Users
 
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Index");
+            if (!UnverUser)
+                return RedirectToPage("./Index");
+            else
+                return Redirect("~/Account/Login");
         }
     }
 }

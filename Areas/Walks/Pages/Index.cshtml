@@ -6,17 +6,20 @@
 }
 
 <div class=row>
-    <div class=col-sm-8>
-        <h1>List of walks</h1>
-    </div>
-    <div class=col-sm-4 align=right>
-        <p>
-            <form method="post">
-                @Html.AntiForgeryToken()
-                <button type="submit" asp-page-handler="Create">Create New</button>
-            </form>
-        </p>
-    </div>
+	<div class=col-sm-8>
+		<h1>List of walks</h1>
+	</div>
+    @if (User.Identity.IsAuthenticated && !User.IsInRole("UnverifiedUser"))
+    {
+	    <div class=col-sm-4 align=right>
+		    <p>
+			    <form method="post">
+				    @Html.AntiForgeryToken()
+				    <button type="submit" asp-page-handler="Create">Create New</button>
+			    </form>
+		    </p>
+	    </div>
+    }
 </div>
 
 <table class="table">
@@ -67,11 +70,14 @@
             <td>
                     @Html.DisplayFor(modelItem => item.Comment)
             </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
+	        <td>
+		        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker")))
+		        {
+			        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+			        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+		        }
+		        <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+	        </td>
         </tr>
 }
     </tbody>

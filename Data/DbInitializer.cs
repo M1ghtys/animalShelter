@@ -75,7 +75,6 @@ namespace iis.Data
             {
                 if (!_dbContext.Users.Any(a => a.Id == x.Id))
                 {
-                    _dbContext.Users.Add(x);
                     var result = _userManager.CreateAsync(x, "useruser").Result;
                     if (result.Succeeded)
                     {
@@ -94,7 +93,6 @@ namespace iis.Data
             {
                 if (!_dbContext.Users.Any(a => a.Id == x.Id))
                 {
-                    _dbContext.Users.Add(x);
                     var result = _userManager.CreateAsync(x, "useruser").Result;
                     if (result.Succeeded)
                     {
@@ -112,7 +110,6 @@ namespace iis.Data
             {
                 if (!_dbContext.Users.Any(a => a.Id == x.Id))
                 {
-                    _dbContext.Users.Add(x);
                     var result = _userManager.CreateAsync(x, "useruser").Result;
                     if (result.Succeeded)
                     {
@@ -130,7 +127,6 @@ namespace iis.Data
             {
                 if (!_dbContext.Users.Any(a => a.Id == x.Id))
                 {
-                    _dbContext.Users.Add(x);
                     var result = _userManager.CreateAsync(x, "useruser").Result;
                     if (result.Succeeded)
                     {
@@ -142,8 +138,6 @@ namespace iis.Data
                     }
                 }
             }
-
-            _dbContext.SaveChanges();
         }
 
         public void SeedAnimals()

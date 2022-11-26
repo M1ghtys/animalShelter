@@ -16,38 +16,71 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+	            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+		            <ul class="navbar-nav flex-grow-1">
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Animals" asp-page="/Index">Animals</a>
-                        </li>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Walks" asp-page="/Index">Walks</a>
-                            </li>
-                        }
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="VeterinaryRecords" asp-page="/Index">Veterinary Records</a>
-                            </li>
-                        }
-                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                        {
-	                        <li class="nav-item">
-		                        <a class="nav-link text-dark" asp-area="Users" asp-page="/Index">Users</a>
-	                        </li>
-                        }
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="ShelterInfo" asp-page="/Index">Shelter information</a>
-                        </li>
-                    </ul>
-                </div>
+			            <li class="nav-item">
+				            <a class="nav-link text-dark" asp-area="Animals" asp-page="/Index">Animals</a>
+			            </li>
+			            @if (User.Identity.IsAuthenticated)
+			            {
+				            <li class="nav-item">
+					            <a class="nav-link text-dark" asp-area="Walks" asp-page="/Index">Walks</a>
+				            </li>
+			            }
+			            @if (User.Identity.IsAuthenticated)
+			            {
+				            <li class="nav-item">
+					            <a class="nav-link text-dark" asp-area="VeterinaryRecords" asp-page="/Index">Veterinary Records</a>
+				            </li>
+			            }
+			            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+			            {
+				            <li class="nav-item">
+					            <a class="nav-link text-dark" asp-area="Users" asp-page="/Index">Users</a>
+				            </li>
+			            }
+			            <li class="nav-item">
+				            <a class="nav-link text-dark" asp-area="ShelterInfo" asp-page="/Index">Shelter information</a>
+			            </li>
+		            </ul>
+	            </div>
+
+	            @if (User.Identity.IsAuthenticated)
+	            {
+		            <span style="font-weight: bold">@User.Identity.Name</span>
+		            <span> (</span>
+		            @if (User.IsInRole("Admin"))
+		            {
+                        <span>Admin</span>
+		            }
+		            @if (User.IsInRole("Vet"))
+		            {
+			            <span>Vet</span>
+		            }
+		            @if (User.IsInRole("Caretaker"))
+		            {
+						<span>Caretaker</span>
+		            }
+		            @if (User.IsInRole("VerifiedUser"))
+		            {
+						<span>VerifiedUser</span>
+		            }
+		            @if (User.IsInRole("UnverifiedUser"))
+		            {
+						<span>UnverifiedUser</span>
+		            }
+		            <span>)</span>
+	            }
+
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <a class="nav-link text-dark" asp-area="Account" asp-page="/Logout">Logout</a>
+                    <a class="nav-link text-dark" style="color:red" asp-area="Account" asp-page="/Logout">Logout</a>
+                }
+                else
+                {
+	                <a class="nav-link text-dark" style="color: blue" asp-area="Account" asp-page="/Login">Login</a>
+	                <a class="nav-link text-dark" style="color: blue" asp-area="Users" asp-page="/Create">Register</a>
                 }
             </div>
         </nav>

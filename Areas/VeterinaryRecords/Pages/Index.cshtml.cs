@@ -25,7 +25,7 @@ namespace iis.Pages.VeterinaryRecords
         public string AnimalIDSort { get; set; }
         public string DateSort { get; set; }
 
-        public IList<VeterinaryRecord> VeterinaryRecord { get; set; }
+        public IList<VeterinaryRecord> VeterinaryRecords { get; set; }
 
         public async Task OnGetAsync(string sortOrder)
         {
@@ -52,7 +52,11 @@ namespace iis.Pages.VeterinaryRecords
                     break;
             }
 
-            VeterinaryRecord = await VetRecOrder.AsNoTracking().ToListAsync();
+            VeterinaryRecords = await VetRecOrder.AsNoTracking().ToListAsync();
+        }
+        public IActionResult OnPostCreate()
+        {
+            return RedirectToPage("Create");
         }
     }
 }

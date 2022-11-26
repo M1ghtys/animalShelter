@@ -39,16 +39,11 @@ namespace iis.Pages.Account
             var result = await _signInManager.PasswordSignInAsync(Username, Password, isPersistent: false, lockoutOnFailure: false);
             if (!result.Succeeded)
             {
-                //add model error
+                //TODO add model error
                 return Page();
             }
 
             return Redirect("~/Account/Login");
-        }
-
-        public IActionResult OnPostRegister()
-        {
-            return RedirectToPage("Register");
         }
     }
 }
