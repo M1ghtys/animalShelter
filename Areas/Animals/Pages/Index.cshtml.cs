@@ -23,9 +23,35 @@ namespace iis.Pages.Animals
 
         public IList<Animal> Animals { get;set; }
 
-        public async Task OnGetAsync()
+        public string BirthSort { get; set; }
+        public string DateOASort { get; set; }
+
+        public async Task OnGetAsync(string sortOrder)
         {
-            Animals = await _context.Animal.ToListAsync();
+
+            BirthSort = String.IsNullOrEmpty(sortOrder) ? "birth_desc" : "";
+            DateOASort = sortOrder == "DateOA" ? "DateOA_desc" : "DateOA";
+
+            IQueryable<Animal> AnimalRecord = from s in _context.Animal
+                                                       select s;
+
+            switch (sortOrder)
+            {
+                case "birth_desc":
+                    AnimalRecord = AnimalRecord.OrderByDescending(s => s.Birth);
+                    break;
+                case "DateOA":
+                    AnimalRecord = AnimalRecord.OrderBy(s => s.DateOfArrival);
+                    break;
+                case "DateOA_desc":
+                    AnimalRecord = AnimalRecord.OrderByDescending(s => s.DateOfArrival);
+                    break;
+                default:
+                    AnimalRecord = AnimalRecord.OrderBy(s => s.Id);
+                    break;
+            }
+
+            Animals = await AnimalRecord.AsNoTracking().ToListAsync();
             foreach (var a in Animals)
             {
                 a.Photos = _context.Photo.Where(p => p.AnimalId == a.Id).ToList();

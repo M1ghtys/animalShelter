@@ -97,6 +97,8 @@ namespace iis
             {
                 options.AddPolicy("RequireAdministratorRole",
                     policy => policy.RequireRole("Admin"));
+                options.AddPolicy("RequireCaretakerRole",
+                    policy => policy.RequireRole("Caretaker"));
             });
         }
 
