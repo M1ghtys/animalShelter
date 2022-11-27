@@ -30,7 +30,9 @@ namespace iis.Pages.Users
         }
 
         [BindProperty]
-        public User User { get; set; }
+        public User UserModel { get; set; }
+        [BindProperty]
+        public Role Role { get; set; }
         [BindProperty]
         public bool DuplicateUserName { get; set; }
 
@@ -41,13 +43,15 @@ namespace iis.Pages.Users
                 return NotFound();
             }
 
-            User = await _context.Users.FirstOrDefaultAsync(m => m.Id == id.ToString());
-            User.Role = await _facade.GetUserRoleAsync(id.ToString());
-
-            if (User == null)
+            UserModel = await _context.Users.FirstOrDefaultAsync(m => m.Id == id.ToString());
+            //UserModel.Role = await _facade.GetUserRoleAsync(id.ToString());
+           
+            if (UserModel == null)
             {
                 return NotFound();
             }
+
+            Role = await _facade.GetUserRoleAsync(UserModel.Id);
 
             return Page();
         }
@@ -61,37 +65,47 @@ namespace iis.Pages.Users
                 return Page();
             }
 
-            DuplicateUserName = await _facade.UsernameExists(User);
+            DuplicateUserName = await _facade.UsernameExists(UserModel);
             if (DuplicateUserName)
             {
                 return Page();
             }
 
+            var user = await _context.Users.FirstAsync(user => user.Id == UserModel.Id);
+            user.Name = UserModel.Name;
+            user.UserName = UserModel.UserName;
+            user.Address = UserModel.Address;
+            user.PhoneNumber = UserModel.PhoneNumber;
+            user.Email = UserModel.Email;
+
+            var savingResult = await _context.SaveChangesAsync();
+
+            if (savingResult == 0)
+            {
+                ModelState.AddModelError("User", "Saving User Failed");
+                return Page();
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var result = await _userManager.RemoveFromRolesAsync(user, roles);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("User", "Cannot remove user roles");
+                return Page();
+            }
+            result = await _userManager.AddToRoleAsync(user, Role.ToString());
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("User", "Cannot add roles to user");
+                return Page();
+            }
+
+            return RedirectToPage("Index", new { area = "Users" });
             //TODO doesn't work + add update role
             //var result = await _userManager.UpdateAsync(User);
-            //if (result.Succeeded)
-            //    return RedirectToAction("Index");
 
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!_facade.UserExists(Guid.Parse(User.Id)))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
 
-            if (HttpContext.User.IsInRole("Admin"))
-                return RedirectToPage("./Index");
-            else
-                return Redirect("~/Animals");
+
         }
     }
 }

@@ -30,6 +30,8 @@ namespace iis.Pages.Users
         [BindProperty]
         public iis.Models.User User { get; set; }
         [BindProperty]
+        public Role Role { get; set; }
+        [BindProperty]
         public string Password { get; set; }
         [BindProperty]
         public bool UnverUser { get; set; }
@@ -66,13 +68,13 @@ namespace iis.Pages.Users
 
             if (UnverUser)
             {
-                User.Role = Role.UnverifiedUser;
+                Role = Role.UnverifiedUser;
             }
 
             var result = _userManager.CreateAsync(User, Password).Result;
             if (result.Succeeded)
             {
-                result = _userManager.AddToRoleAsync(User, Roles.GetRoles()[User.Role]).Result;
+                result = _userManager.AddToRoleAsync(User, Roles.GetRoles()[Role]).Result;
             }
 
             if (!result.Succeeded)

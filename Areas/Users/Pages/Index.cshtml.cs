@@ -27,13 +27,16 @@ namespace iis.Pages.Users
         }
         
         public IList<User> Users { get;set; }
+        public List<string> Roles { get; set; } = new List<string>();
 
         public async Task OnGetAsync()
         {
             Users = _context.Users.ToList();
+
             foreach (var u in Users)
             {
-                u.Role = await _facade.GetUserRoleAsync(u.Id);
+                var role = await _facade.GetUserRoleAsync(u.Id);
+                Roles.Add(role.ToString());
             }
         }
 

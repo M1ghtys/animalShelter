@@ -27,6 +27,7 @@ namespace iis.Pages.Users
         }
 
         public User User { get; set; }
+        public Role Role { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
@@ -36,7 +37,7 @@ namespace iis.Pages.Users
             }
             
             User = await _context.Users.FirstOrDefaultAsync(m => m.Id == id.ToString());
-            User.Role = await _facade.GetUserRoleAsync(id.ToString());
+            Role = await _facade.GetUserRoleAsync(id.ToString());
             
             if (User == null)
             {

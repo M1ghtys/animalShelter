@@ -30,7 +30,7 @@
 			@Html.DisplayNameFor(model => model.Users[0].UserName)
 		</th>
 		<th>
-			@Html.DisplayNameFor(model => model.Users[0].Role)
+			Roles
 		</th>
 		<th>
 			@Html.DisplayNameFor(model => model.Users[0].Address)
@@ -45,31 +45,31 @@
 	</tr>
 	</thead>
 	<tbody>
-		@foreach (var item in Model.Users)
+		@for (int i = 0; i < Model.Users.Count; i++)
 		{
 			<tr>
 				<td>
-					@Html.DisplayFor(modelItem => item.Name)
+					@Html.DisplayFor(modelItem => Model.Users[i].Name)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.UserName)
+					@Html.DisplayFor(modelItem => Model.Users[i].UserName)
 				</td>
 				<td>
-					@Html.DisplayFor(model => item.Role)
+					@Html.DisplayFor(model => Model.Roles[i])
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.Address)
+					@Html.DisplayFor(modelItem => Model.Users[i].Address)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.Email)
+					@Html.DisplayFor(modelItem => Model.Users[i].Email)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.PhoneNumber)
+					@Html.DisplayFor(modelItem => Model.Users[i].PhoneNumber)
 				</td>
 				<td>
-					<a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
-					<a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-					<a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+					<a asp-page="./Edit" asp-route-id="@Model.Users[i].Id">Edit</a>
+					<a asp-page="./Delete" asp-route-id="@Model.Users[i].Id">Delete</a>
+					<a asp-page="./Details" asp-route-id="@Model.Users[i].Id">Details</a>
 				</td>
 			</tr>
 		}

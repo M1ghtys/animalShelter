@@ -9,7 +9,6 @@ namespace iis.Models
     {
         public string Name { get; set; }
         public string Address { get; set; }
-        public Role Role { get; set; }
 
         public ICollection<Walk> Walks { get; set; } = new Collection<Walk>();
     }
