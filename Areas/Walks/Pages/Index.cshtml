@@ -23,6 +23,19 @@
     }
 </div>
 
+<form asp-page="./Index" method="get">
+    <div class="form-actions">
+        <p>
+            Find by name:
+            <input id="search" type="text" name="SearchString" value="@Model.CurrentFilter" />
+            Find by volunteer:
+            <input id="search" type="text" name="SearchStringV" value="@Model.CurrentFilterV" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>

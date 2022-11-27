@@ -26,17 +26,39 @@ namespace iis.Pages.Walks
         public string FinishTimeSort { get; set; }
         public string StateSort { get; set; }
         public string CurrentFilter { get; set; }
-        public string CurrentSort { get; set; }
+        public string CurrentFilterV { get; set; }
         public IList<Walk> Walks { get;set; }
         
 
-        public async Task OnGetAsync(string sortOrder)
+        public async Task OnGetAsync(string sortOrder, string searchString, string searchStringV)
         {
             
             StartTimeSort = String.IsNullOrEmpty(sortOrder) ? "time_desc" : "";
             StateSort = sortOrder == "State" ? "State_desc" : "State";
             
             IList<Walk> walkOrder = _context.Walk.ToList();
+            CurrentFilter = searchString;
+            CurrentFilterV = searchStringV;
+
+            foreach (var v in walkOrder)
+            {
+                v.Animal = await _context.Animal.FirstOrDefaultAsync(a => a.Id == v.AnimalId);
+            }
+
+            foreach (var v in walkOrder)
+            {
+                v.User = await _context.Users.FirstOrDefaultAsync(n => n.Id == v.UserId.ToString());
+            }
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                walkOrder = walkOrder.Where(s => s.Animal.Name.Contains(searchString)).ToList();
+            }
+
+            if (!String.IsNullOrEmpty(searchStringV))
+            {
+                walkOrder = walkOrder.Where(s => s.User.Name.Contains(searchStringV)).ToList();
+            }
 
             switch (sortOrder)
             {

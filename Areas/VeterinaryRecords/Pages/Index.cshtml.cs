@@ -23,39 +23,44 @@ namespace iis.Pages.VeterinaryRecords
 
         public string AnimalNameSort { get; set; }
         public string DateSort { get; set; }
+        public string CurrentFilter { get; set; }
 
         public IList<VeterinaryRecord> VeterinaryRecords { get; set; }
 
-        public async Task OnGetAsync(string sortOrder)
+        public async Task OnGetAsync(string sortOrder, string searchString)
         {
             AnimalNameSort = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
             DateSort = sortOrder == "Date" ? "Date_desc" : "Date";
 
-            IQueryable<VeterinaryRecord> VetRecOrder = from s in _context.VeterinaryRecord
-                                         select s;
+            CurrentFilter = searchString;
+
+            IList<VeterinaryRecord> VetRecOrder = _context.VeterinaryRecord.ToList();
 
             foreach (var v in VetRecOrder)
             {
                 v.Animal = await _context.Animal.FirstOrDefaultAsync(a => a.Id == v.AnimalId);
             }
 
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                VetRecOrder = VetRecOrder.Where(s => s.Animal.Name.Contains(searchString)).ToList();
+            }
+
             switch (sortOrder)
             {
                 case "id_desc":
-                    VetRecOrder = VetRecOrder.OrderByDescending(s => s.Animal.Name);
+                    VeterinaryRecords = VetRecOrder.OrderByDescending(s => s.Animal.Name).ToList();
                     break;
                 case "Date":
-                    VetRecOrder = VetRecOrder.OrderBy(s => s.Date);
+                    VeterinaryRecords = VetRecOrder.OrderBy(s => s.Date).ToList();
                     break;
                 case "Date_desc":
-                    VetRecOrder = VetRecOrder.OrderByDescending(s => s.Date);
+                    VeterinaryRecords = VetRecOrder.OrderByDescending(s => s.Date).ToList();
                     break;
                 default:
-                    VetRecOrder = VetRecOrder.OrderBy(s => s.Animal.Name);
+                    VeterinaryRecords = VetRecOrder.OrderBy(s => s.Animal.Name).ToList();
                     break;
             }
-
-            VeterinaryRecords = await VetRecOrder.AsNoTracking().ToListAsync();
 
             foreach (var v in VeterinaryRecords)
             {

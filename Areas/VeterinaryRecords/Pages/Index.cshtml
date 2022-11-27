@@ -5,6 +5,20 @@
     ViewData["Title"] = "VeterinaryRecords";
 }
 
+@section Scripts {
+	<script type="text/javascript">
+	var order = "Date";
+	const  updateFlag = function() {
+		window.history.pushState('VeterinaryRecords','', '?SearchString='+
+		document.getElementById('search').value + "&sortOrder=" + order);
+		alert("here");
+		$('#data').load(location.href + "#data");
+	};
+
+	$('#search').on('input', updateFlag);
+</script>
+}
+
 <div class=row>
 	<div class=col-sm-8>
 		<h1>Veterinary Records</h1>
@@ -23,6 +37,30 @@
 </div>
 
 
+<form asp-page="./Index" method="get">
+    <div class="form-actions">
+        <p>
+            Find by name:
+            <input onchange="updateFlag()" id="search" type="text" name="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
+</form>
+
+<script type="text/javascript">
+	var order = "Date";
+	const  updateFlag = function() {
+		window.history.pushState('VeterinaryRecords','', '?SearchString='+
+		document.getElementById('search').value + "&sortOrder=" + order);
+		$('#data').load(location.href + "#data");
+	};
+
+	$('#search').on('input', updateFlag);
+</script>
+
+
+<div id="data">
 <table class="table">
 	<thead>
 	<tr>
@@ -76,3 +114,4 @@
 	}
 	</tbody>
 </table>
+</div>
