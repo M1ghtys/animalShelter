@@ -34,12 +34,12 @@
             }
             <div class="form-group">
                 <label asp-for="Walk.StartTime" class="control-label"></label>
-                <input asp-for="Walk.StartTime" class="form-control" />
+                <input asp-for="Walk.StartTime" id="lDate" onfocusout="validate();" class="form-control" />
                 <span asp-validation-for="Walk.StartTime" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Walk.FinishTime" class="control-label"></label>
-                <input asp-for="Walk.FinishTime" class="form-control" />
+                <input asp-for="Walk.FinishTime" id="gDate" onfocusout="validate();" class="form-control" />
                 <span asp-validation-for="Walk.FinishTime" class="text-danger"></span>
             </div>
             @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker")))
@@ -72,4 +72,16 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+
+            function validate() {
+                var lesser = document.getElementById("lDate");
+                var greater = document.getElementById("gDate");
+
+                if (lesser.value > greater.value) {
+                    alert("Start Time should not begin after Finish Time");
+                    lesser.value = greater.value;
+                }
+            }
+</script>
 }

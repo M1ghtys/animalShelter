@@ -12,18 +12,18 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Animal.ChipNumber" class="control-label"></label>
-                <input asp-for="Animal.ChipNumber" class="form-control" />
+                <label asp-for="Animal.ChipNumber" class="control-label">Chip Number</label>
+                <input asp-for="Animal.ChipNumber" minlength="11" maxlength="11" required class="form-control" />
                 <span asp-validation-for="Animal.ChipNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Animal.Name" class="control-label"></label>
-                <input asp-for="Animal.Name" class="form-control" />
+                <input asp-for="Animal.Name" required class="form-control" />
                 <span asp-validation-for="Animal.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Animal.Breed" class="control-label"></label>
-                <input asp-for="Animal.Breed" class="form-control" />
+                <input asp-for="Animal.Breed" required class="form-control" />
                 <span asp-validation-for="Animal.Breed" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -33,12 +33,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Animal.Birth" class="control-label"></label>
-                <input asp-for="Animal.Birth" class="form-control" />
+                <input asp-for="Animal.Birth" id="lDate" onfocusout="validate();"  class="form-control" />
                 <span asp-validation-for="Animal.Birth" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Animal.DateOfArrival" class="control-label"></label>
-                <input asp-for="Animal.DateOfArrival" class="form-control" />
+                <input asp-for="Animal.DateOfArrival" id="gDate" onfocusout="validate();" class="form-control" />
                 <span asp-validation-for="Animal.DateOfArrival" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -108,4 +108,18 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+            lDate.value = "@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")";
+            gDate.value = "@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")";
+
+            function validate() {
+                var lesser = document.getElementById("lDate");
+                var greater = document.getElementById("gDate");
+
+                if (lesser.value > greater.value) {
+                    alert("Date of Arrival should not be before Birth");
+                    lesser.value = greater.value;
+                }
+            }
+</script>
 }
