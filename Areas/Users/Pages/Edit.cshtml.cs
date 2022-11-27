@@ -12,6 +12,7 @@ using iis.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace iis.Pages.Users
 {
@@ -35,7 +36,15 @@ namespace iis.Pages.Users
         public Role Role { get; set; }
         [BindProperty]
         public string Password { get; set; }
+        [BindProperty]
+        [Required]
+        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage = "Invalid Email")]
+        public string Email { get; set; }
+        [BindProperty]
+        [Required]
+        [RegularExpression(@"(?:[+]{1}[0-9]{2,3})?[0-9]{3}[0-9]{3}[0-9]{3}", ErrorMessage = "Invalid Phone Number")]
 
+        public string PhoneNumber { get; set; }
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
             if (id == null || !_facade.UserExists(id))
@@ -50,6 +59,9 @@ namespace iis.Pages.Users
             {
                 return NotFound();
             }
+
+            Email = UserModel.Email;
+            PhoneNumber = UserModel.PhoneNumber;
 
             Role = await _facade.GetUserRoleAsync(UserModel.Id);
 
@@ -75,8 +87,8 @@ namespace iis.Pages.Users
             user.Name = UserModel.Name;
             user.UserName = UserModel.UserName;
             user.Address = UserModel.Address;
-            user.PhoneNumber = UserModel.PhoneNumber;
-            user.Email = UserModel.Email;
+            user.PhoneNumber = PhoneNumber;
+            user.Email = Email;
             
 
             var savingResult = await _context.SaveChangesAsync();

@@ -10,6 +10,7 @@ using iis.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using iis.Facades;
+using System.ComponentModel.DataAnnotations;
 
 namespace iis.Pages.Users
 {
@@ -33,6 +34,14 @@ namespace iis.Pages.Users
         public Role Role { get; set; }
         [BindProperty]
         public string Password { get; set; }
+        [BindProperty]
+        [Required]
+        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage ="Invalid Email")]
+        public string Email { get; set; }
+        [BindProperty]
+        [Required]
+        [RegularExpression(@"(?:[+]{1}[0-9]{2,3})?[0-9]{3}[0-9]{3}[0-9]{3}", ErrorMessage = "Invalid Phone Number")]
+        public string PhoneNumber { get; set; }
         [BindProperty]
         public bool UnverUser { get; set; }
         [BindProperty]
@@ -71,7 +80,9 @@ namespace iis.Pages.Users
             {
                 Role = Role.UnverifiedUser;
             }
-
+            //add regex values
+            User.Email = Email;
+            User.PhoneNumber = PhoneNumber;
             var result = _userManager.CreateAsync(User, Password).Result;
             if (result.Succeeded)
             {
