@@ -24,33 +24,21 @@ namespace iis.Pages.Animals
 
         public string BirthSort { get; set; }
         public string DateOASort { get; set; }
+        public string CurrentFilter { get; set; }
+        public string CurrentFilterV { get; set; }
 
-        public async Task OnGetAsync(string sortOrder)
+        public async Task OnGetAsync(string sortOrder, string searchString, string searchStringV)
         {
 
             BirthSort = String.IsNullOrEmpty(sortOrder) ? "birth_desc" : "";
             DateOASort = sortOrder == "DateOA" ? "DateOA_desc" : "DateOA";
 
-            IQueryable<Animal> AnimalRecord = from s in _context.Animal
-                                                       select s;
+            CurrentFilter = searchString;
+            CurrentFilterV = searchStringV;
 
-            switch (sortOrder)
-            {
-                case "birth_desc":
-                    AnimalRecord = AnimalRecord.OrderByDescending(s => s.Birth);
-                    break;
-                case "DateOA":
-                    AnimalRecord = AnimalRecord.OrderBy(s => s.DateOfArrival);
-                    break;
-                case "DateOA_desc":
-                    AnimalRecord = AnimalRecord.OrderByDescending(s => s.DateOfArrival);
-                    break;
-                default:
-                    AnimalRecord = AnimalRecord.OrderBy(s => s.Id);
-                    break;
-            }
+            IList<Animal> AnimalRecord = _context.Animal.ToList();
+            Animals = AnimalRecord;
 
-            Animals = await AnimalRecord.AsNoTracking().ToListAsync();
             foreach (var a in Animals)
             {
                 a.Photos = _context.Photo.Where(p => p.AnimalId == a.Id).ToList();
@@ -63,6 +51,40 @@ namespace iis.Pages.Animals
                     });
                 }
             }
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                AnimalRecord = AnimalRecord.Where(s => s.Breed.Contains(searchString)).ToList();
+            }
+
+            if (!String.IsNullOrEmpty(searchStringV))
+            {
+                if(searchStringV == "reserved")
+                {
+                    AnimalRecord = AnimalRecord.Where(s => s.Reserved).ToList();
+                } else if(searchStringV == "not reserved")
+                {
+                    AnimalRecord = AnimalRecord.Where(s => !s.Reserved).ToList();
+                }
+                
+            }
+
+            switch (sortOrder)
+            {
+                case "birth_desc":
+                    Animals = AnimalRecord.OrderByDescending(s => s.Birth).ToList();
+                    break;
+                case "DateOA":
+                    Animals = AnimalRecord.OrderBy(s => s.DateOfArrival).ToList();
+                    break;
+                case "DateOA_desc":
+                    Animals = AnimalRecord.OrderByDescending(s => s.DateOfArrival).ToList();
+                    break;
+                default:
+                    Animals = AnimalRecord.OrderBy(s => s.Id).ToList();
+                    break;
+            }
+
         }
 
         public IActionResult OnPostCreate()

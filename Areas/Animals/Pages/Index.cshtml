@@ -23,24 +23,41 @@
     
 </div>
 
+<form asp-page="./Index" method="get">
+    <div class="form-actions">
+        <p>
+            Find by species:
+            <input id="search" type="text" name="SearchString" value="@Model.CurrentFilter" />
+            reserved|not reserved:
+            <input id="search" type="text" name="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
+</form>
+
 <table class="table">
     <thead>
     <tr>
         <th></th>
-        <th>
+        <th>    
             @Html.DisplayNameFor(model => model.Animals[0].Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Animals[0].Breed)
+            Species
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Animals[0].Gender)
         </th>
         <th>
+            <a asp-page="./Index" asp-route-sortOrder="@Model.BirthSort">
             @Html.DisplayNameFor(model => model.Animals[0].Birth)
+            </a>
         </th>
         <th>
+            <a asp-page="./Index" asp-route-sortOrder="@Model.DateOASort">
             @Html.DisplayNameFor(model => model.Animals[0].DateOfArrival)
+            </a>
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Animals[0].Size)

@@ -43,10 +43,6 @@ namespace iis.Pages.Walks
             foreach (var v in walkOrder)
             {
                 v.Animal = await _context.Animal.FirstOrDefaultAsync(a => a.Id == v.AnimalId);
-            }
-
-            foreach (var v in walkOrder)
-            {
                 v.User = await _context.Users.FirstOrDefaultAsync(n => n.Id == v.UserId.ToString());
             }
 
