@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using iis.Data;
 using iis.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace iis.Pages.Walks
 {
-
+    [Authorize(Roles = "Admin,Vet,Caretaker,VerifiedUser")]
     public class CreateModel : PageModel
     {
         private readonly iis.Data.DbContext _context;

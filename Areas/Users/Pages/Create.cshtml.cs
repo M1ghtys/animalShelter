@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using iis.Data;
 using iis.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
+using iis.Facades;
 
 namespace iis.Pages.Users
 {
@@ -16,28 +18,27 @@ namespace iis.Pages.Users
     {
         private readonly iis.Data.DbContext _context;
         private readonly UserManager<Models.User> _userManager;
-
-        
+        private readonly UserFacade _facade;
 
         public CreateModel(iis.Data.DbContext context, UserManager<iis.Models.User> userManager)
         {
             _context = context;
             _userManager = userManager;
+            _facade = new UserFacade(context, userManager);
         }
 
         [BindProperty]
         public iis.Models.User User { get; set; }
         [BindProperty]
-        public Role Role { get; set; }
-        [BindProperty]
         public string Password { get; set; }
         [BindProperty]
         public bool UnverUser { get; set; }
+        [BindProperty]
+        public bool DuplicateUserName { get; set; }
 
 
         public IActionResult OnGet()
         {
-            Role = Role.UnverifiedUser;
             return Page();
         }
 
@@ -51,6 +52,13 @@ namespace iis.Pages.Users
                 return Page();
             }
 
+            DuplicateUserName = await _facade.UsernameExists(User);
+            if (DuplicateUserName)
+            {
+                return Page();
+            }
+
+
             if (Password == null)
             {
                 Password = "useruser";
@@ -58,13 +66,13 @@ namespace iis.Pages.Users
 
             if (UnverUser)
             {
-                Role = Role.UnverifiedUser;
+                User.Role = Role.UnverifiedUser;
             }
-            
+
             var result = _userManager.CreateAsync(User, Password).Result;
             if (result.Succeeded)
             {
-                result = _userManager.AddToRoleAsync(User, Roles.GetRoles()[Role]).Result;
+                result = _userManager.AddToRoleAsync(User, Roles.GetRoles()[User.Role]).Result;
             }
 
             if (!result.Succeeded)

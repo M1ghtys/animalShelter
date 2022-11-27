@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using iis.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Security.Claims;
 
 namespace iis.Pages.Walks
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Caretaker,Vet,VerifiedUser")]
     public class IndexModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
@@ -33,28 +35,25 @@ namespace iis.Pages.Walks
             
             StartTimeSort = String.IsNullOrEmpty(sortOrder) ? "time_desc" : "";
             StateSort = sortOrder == "State" ? "State_desc" : "State";
-
-            IQueryable<Walk> walkOrder = from s in _context.Walk
-                                         select s;
+            
+            IList<Walk> walkOrder = _context.Walk.ToList();
 
             switch (sortOrder)
             {
                 case "time_desc":
-                    walkOrder = walkOrder.OrderByDescending(s => s.StartTime);
+                    Walks = walkOrder.OrderByDescending(s => s.StartTime).ToList();
                     break;
                 case "State":
-                    walkOrder = walkOrder.OrderBy(s => s.State);
+                    Walks = walkOrder.OrderBy(s => s.State).ToList();
                     break;
                 case "State_desc":
-                    walkOrder = walkOrder.OrderByDescending(s => s.State);
+                    Walks = walkOrder.OrderByDescending(s => s.State).ToList();
                     break;
                 default:
-                    walkOrder = walkOrder.OrderBy(s => s.StartTime);
+                    Walks = walkOrder.OrderBy(s => s.StartTime).ToList();
                     break;
             }
-
-            Walks = await walkOrder.AsNoTracking().ToListAsync();
-
+            
             foreach (var w in Walks)
             {
                 w.Animal = await _context.Animal.FirstOrDefaultAsync(a => a.Id == w.AnimalId);

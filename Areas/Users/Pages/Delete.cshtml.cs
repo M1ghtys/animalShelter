@@ -9,9 +9,12 @@ using iis.Data;
 using iis.Models;
 using iis.Facades;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace iis.Pages.Users
 {
+    [Authorize(Roles = "Admin")]
     public class DeleteModel : PageModel
     {
         private readonly iis.Data.DbContext _context;

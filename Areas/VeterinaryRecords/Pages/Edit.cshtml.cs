@@ -9,9 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using iis.Data;
 using iis.Facades;
 using iis.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace iis.Pages.VeterinaryRecords
 {
+    [Authorize(Roles = "Admin,Vet,Caretaker")]
     public class EditModel : PageModel
     {
         private readonly iis.Data.DbContext _context;

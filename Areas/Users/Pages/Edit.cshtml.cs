@@ -10,9 +10,12 @@ using iis.Data;
 using iis.Facades;
 using iis.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace iis.Pages.Users
 {
+    [Authorize]
     public class EditModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
@@ -29,7 +32,7 @@ namespace iis.Pages.Users
         [BindProperty]
         public User User { get; set; }
         [BindProperty]
-        public Role Role { get; set; }
+        public bool DuplicateUserName { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
@@ -39,7 +42,7 @@ namespace iis.Pages.Users
             }
 
             User = await _context.Users.FirstOrDefaultAsync(m => m.Id == id.ToString());
-            Role = await _facade.GetUserRoleAsync(id);
+            User.Role = await _facade.GetUserRoleAsync(id.ToString());
 
             if (User == null)
             {
@@ -54,6 +57,12 @@ namespace iis.Pages.Users
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            DuplicateUserName = await _facade.UsernameExists(User);
+            if (DuplicateUserName)
             {
                 return Page();
             }
@@ -79,7 +88,10 @@ namespace iis.Pages.Users
             //    }
             //}
 
-            return RedirectToPage("./Index");
+            if (HttpContext.User.IsInRole("Admin"))
+                return RedirectToPage("./Index");
+            else
+                return Redirect("~/Animals");
         }
     }
 }
