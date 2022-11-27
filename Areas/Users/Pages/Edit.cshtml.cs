@@ -34,7 +34,7 @@ namespace iis.Pages.Users
         [BindProperty]
         public Role Role { get; set; }
         [BindProperty]
-        public bool DuplicateUserName { get; set; }
+        public string Password { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
@@ -65,12 +65,19 @@ namespace iis.Pages.Users
                 return Page();
             }
 
-            DuplicateUserName = await _facade.UsernameExists(UserModel);
-            if (DuplicateUserName)
+            var duplicate = await _facade.UsernameExists(UserModel);
+            if (duplicate)
             {
                 return Page();
             }
 
+            if (String.IsNullOrEmpty(Password))
+            {
+                ModelState.AddModelError("", "Password Cannot Be Empty");
+                return Page();
+            }
+
+            var passwordHasher = _userManager.PasswordHasher;
             var user = await _context.Users.FirstAsync(user => user.Id == UserModel.Id);
             user.Name = UserModel.Name;
             user.UserName = UserModel.UserName;
@@ -78,26 +85,36 @@ namespace iis.Pages.Users
             user.PhoneNumber = UserModel.PhoneNumber;
             user.Email = UserModel.Email;
 
+            
+            var pw = passwordHasher.HashPassword(user, Password);
+            user.PasswordHash = pw;
+            
+
             var savingResult = await _context.SaveChangesAsync();
 
             if (savingResult == 0)
             {
-                ModelState.AddModelError("User", "Saving User Failed");
+                ModelState.AddModelError("", "Saving User Failed");
                 return Page();
             }
 
+            
             var roles = await _userManager.GetRolesAsync(user);
-            var result = await _userManager.RemoveFromRolesAsync(user, roles);
-            if (!result.Succeeded)
+
+            if (roles.FirstOrDefault() != Role.ToString())
             {
-                ModelState.AddModelError("User", "Cannot remove user roles");
-                return Page();
-            }
-            result = await _userManager.AddToRoleAsync(user, Role.ToString());
-            if (!result.Succeeded)
-            {
-                ModelState.AddModelError("User", "Cannot add roles to user");
-                return Page();
+                var result = await _userManager.RemoveFromRolesAsync(user, roles);
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", "Cannot remove user roles");
+                    return Page();
+                }
+                result = await _userManager.AddToRoleAsync(user, Role.ToString());
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", "Cannot add roles to user");
+                    return Page();
+                }
             }
 
             return RedirectToPage("Index", new { area = "Users" });

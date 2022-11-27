@@ -63,7 +63,8 @@ namespace iis.Pages.Users
 
             if (Password == null)
             {
-                Password = "useruser";
+                ModelState.AddModelError("","Password Cannot Be Empty");
+                return Page();
             }
 
             if (UnverUser)
