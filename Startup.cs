@@ -57,7 +57,7 @@ namespace iis
                         Directory.CreateDirectory(pathRootDirectory);
                     }
 
-                    var dbPath = Path.Combine(pathRootDirectory, "iis.db");
+                    var dbPath = Path.Combine(pathRootDirectory, "iis2.db");
                     
                     return new SqliteIISDbContext($"Data Source={dbPath}");
                 });
@@ -91,15 +91,6 @@ namespace iis
 
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();
-
-            // add policeies for authorization
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("RequireAdministratorRole",
-                    policy => policy.RequireRole("Admin"));
-                options.AddPolicy("RequireCaretakerRole",
-                    policy => policy.RequireRole("Caretaker"));
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -88,6 +88,10 @@
 			        <input class="form-check-input" asp-for="Animal.Handicapped" /> @Html.DisplayNameFor(model => model.Animal.Handicapped)
 		        </label>
 	        </div>
+	        <div class="form-group">
+		        <label asp-for="Photo" class="control-label">Photo url to add:</label>
+		        <input asp-for="Photo" class="form-control" />
+	        </div>
 	        <div class="form-group form-check">
 		        <label class="form-check-label">
 			        <input class="form-check-input" asp-for="Animal.Vaccinated" /> @Html.DisplayNameFor(model => model.Animal.Vaccinated)

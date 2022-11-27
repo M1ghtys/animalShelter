@@ -17,7 +17,10 @@ namespace iis.Data
             modelBuilder.Entity<Walk>()
                 .HasOne(w => w.Animal)
                 .WithMany(a => a.Walks);
-            
+            modelBuilder.Entity<Walk>()
+                .HasOne(w => w.User)
+                .WithMany(u => u.Walks);
+
             modelBuilder.Entity<VeterinaryRecord>()
                 .HasOne(v => v.Animal)
                 .WithMany(a => a.VeterinaryRecords);

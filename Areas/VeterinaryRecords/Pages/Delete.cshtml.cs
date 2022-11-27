@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using iis.Data;
 using iis.Models;
 using iis.Facades;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace iis.Pages.VeterinaryRecords
 {
+    [Authorize(Roles = "Admin,Vet,Caretaker")]
     public class DeleteModel : PageModel
     {
         private readonly iis.Data.DbContext _context;

@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using iis.Data;
 using iis.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace iis.Pages.Animals
 {
+    [Authorize(Roles = "Admin,Caretaker")]
     public class CreateModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
@@ -27,12 +30,24 @@ namespace iis.Pages.Animals
         [BindProperty]
         public Animal Animal { get; set; }
 
+        [BindProperty]
+        public string Photo { get; set; }
+
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
+            }
+
+            if (Photo != null)
+            {
+                _context.Photo.Add(new Photo()
+                {
+                    AnimalId = Animal.Id,
+                    Source = Photo
+                });
             }
 
             _context.Animal.Add(Animal);

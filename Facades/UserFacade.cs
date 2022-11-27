@@ -26,39 +26,45 @@ namespace iis.Facades
             return _context.Users.Any(e => e.Id == id.ToString());
         }
 
-        public async Task<Role> GetUserRoleAsync(Guid? id)
+        public async Task<Role> GetUserRoleAsync(string? id)
         {
             var UserList = await _userManager.GetUsersInRoleAsync("UnverifiedUser");
             foreach (var u in UserList)
             {
-                if (id.ToString() == u.Id) return Role.UnverifiedUser;
+                if (id == u.Id) return Role.UnverifiedUser;
             }
             
             UserList = await _userManager.GetUsersInRoleAsync("VerifiedUser");
             foreach (var u in UserList)
             {
-                if (id.ToString() == u.Id) return Role.VerifiedUser;
+                if (id == u.Id) return Role.VerifiedUser;
             }
             
             UserList = await _userManager.GetUsersInRoleAsync("Caretaker");
             foreach (var u in UserList)
             {
-                if (id.ToString() == u.Id) return Role.Caretaker;
+                if (id == u.Id) return Role.Caretaker;
             }
 
             UserList = await _userManager.GetUsersInRoleAsync("Vet");
             foreach (var u in UserList)
             {
-                if (id.ToString() == u.Id) return Role.Vet;
+                if (id == u.Id) return Role.Vet;
             }
 
             UserList = await _userManager.GetUsersInRoleAsync("Admin");
             foreach (var u in UserList)
             {
-                if (id.ToString() == u.Id) return Role.Admin;
+                if (id == u.Id) return Role.Admin;
             }
 
             return Role.UnverifiedUser;
+        }
+
+        public async Task<bool> UsernameExists(User user)
+        {
+            var u = await _userManager.FindByNameAsync(user.UserName);
+            return (u != null && !EqualityComparer<string>.Default.Equals(u.Id, user.Id));
         }
     }
 }

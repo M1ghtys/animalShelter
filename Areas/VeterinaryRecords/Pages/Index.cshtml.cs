@@ -11,8 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace iis.Pages.VeterinaryRecords
 {
-    //TODO set again
-    //[Authorize(Policy = "RequireCaretakerRole")]
+    [Authorize(Roles = "Admin,Vet,Caretaker")]
     public class IndexModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
@@ -22,24 +21,28 @@ namespace iis.Pages.VeterinaryRecords
             _context = context;
         }
 
-        public string AnimalIDSort { get; set; }
+        public string AnimalNameSort { get; set; }
         public string DateSort { get; set; }
 
         public IList<VeterinaryRecord> VeterinaryRecords { get; set; }
 
         public async Task OnGetAsync(string sortOrder)
         {
-            // using System;
-            AnimalIDSort = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+            AnimalNameSort = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
             DateSort = sortOrder == "Date" ? "Date_desc" : "Date";
 
             IQueryable<VeterinaryRecord> VetRecOrder = from s in _context.VeterinaryRecord
                                          select s;
 
+            foreach (var v in VetRecOrder)
+            {
+                v.Animal = await _context.Animal.FirstOrDefaultAsync(a => a.Id == v.AnimalId);
+            }
+
             switch (sortOrder)
             {
                 case "id_desc":
-                    VetRecOrder = VetRecOrder.OrderByDescending(s => s.AnimalId);
+                    VetRecOrder = VetRecOrder.OrderByDescending(s => s.Animal.Name);
                     break;
                 case "Date":
                     VetRecOrder = VetRecOrder.OrderBy(s => s.Date);
@@ -48,11 +51,16 @@ namespace iis.Pages.VeterinaryRecords
                     VetRecOrder = VetRecOrder.OrderByDescending(s => s.Date);
                     break;
                 default:
-                    VetRecOrder = VetRecOrder.OrderBy(s => s.AnimalId);
+                    VetRecOrder = VetRecOrder.OrderBy(s => s.Animal.Name);
                     break;
             }
 
             VeterinaryRecords = await VetRecOrder.AsNoTracking().ToListAsync();
+
+            foreach (var v in VeterinaryRecords)
+            {
+                v.Animal = await _context.Animal.FirstOrDefaultAsync(a => a.Id == v.AnimalId);
+            }
         }
         public IActionResult OnPostCreate()
         {

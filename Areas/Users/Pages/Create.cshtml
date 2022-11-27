@@ -10,7 +10,7 @@
 
 <h1>Create</h1>
 
-<h4>Walk</h4>
+<h4>User</h4>
 <hr />
 <div class="row">
 	<div class="col-md-4">
@@ -24,6 +24,10 @@
 			</div>
 			<div class="form-group">
 				<label asp-for="User.UserName" class="control-label"></label>
+				@if (@Model.DuplicateUserName)
+				{
+					<span style="color:red">Username already taken!</span>
+				}
 				<input asp-for="User.UserName" class="form-control" />
 				<span asp-validation-for="User.UserName" class="text-danger"></span>
 			</div>
@@ -50,9 +54,9 @@
 			@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
 			{
 				<div class="form-group">
-					<label asp-for="Role" class="control-label"></label>
-					<select asp-for="Role" asp-items="Html.GetEnumSelectList<Role>()" class="form-control"></select>
-					<span asp-validation-for="Role" class="text-danger"></span>
+					<label asp-for="User.Role" class="control-label"></label>
+					<select asp-for="User.Role" asp-items="Html.GetEnumSelectList<Role>()" class="form-control"></select>
+					<span asp-validation-for="User.Role" class="text-danger"></span>
 				</div>
 			}
 			else

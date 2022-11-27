@@ -5,12 +5,9 @@
     ViewData["Title"] = "VeterinaryRecords";
 }
 
-<h1>Veterinary Records</h1>
-
-
 <div class=row>
 	<div class=col-sm-8>
-		<h1>List of walks</h1>
+		<h1>Veterinary Records</h1>
 	</div>
 	@if (User.IsInRole("Caretaker"))
 	{
@@ -30,8 +27,8 @@
 	<thead>
 	<tr>
 		<th>
-			<a asp-page="./Index" asp-route-sortOrder="@Model.AnimalIDSort">
-				@Html.DisplayNameFor(model => model.VeterinaryRecords[0].AnimalId)
+			<a asp-page="./Index" asp-route-sortOrder="@Model.AnimalNameSort">
+				@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Animal.Name)
 			</a>
 		</th>
 		<th>
@@ -53,7 +50,7 @@
 	{
 		<tr>
 			<td>
-				@Html.DisplayFor(modelItem => item.AnimalId)
+				@Html.DisplayFor(modelItem => item.Animal.Name)
 			</td>
 			<td>
 				@Html.DisplayFor(modelItem => item.Date)
@@ -68,7 +65,7 @@
 				@Html.DisplayFor(modelItem => item.Details)
 			</td>
 			<td>
-				@if (User.IsInRole("Vet"))
+				@if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker") || User.IsInRole("Vet")))
 				{
 					<a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
 					<a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
