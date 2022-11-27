@@ -70,31 +70,20 @@ namespace iis.Pages.Users
             {
                 return Page();
             }
-
-            if (String.IsNullOrEmpty(Password))
-            {
-                ModelState.AddModelError("", "Password Cannot Be Empty");
-                return Page();
-            }
-
-            var passwordHasher = _userManager.PasswordHasher;
+           
             var user = await _context.Users.FirstAsync(user => user.Id == UserModel.Id);
             user.Name = UserModel.Name;
             user.UserName = UserModel.UserName;
             user.Address = UserModel.Address;
             user.PhoneNumber = UserModel.PhoneNumber;
             user.Email = UserModel.Email;
-
-            
-            var pw = passwordHasher.HashPassword(user, Password);
-            user.PasswordHash = pw;
             
 
             var savingResult = await _context.SaveChangesAsync();
 
             if (savingResult == 0)
             {
-                ModelState.AddModelError("", "Saving User Failed");
+                ModelState.AddModelError("", "No Change Was Made");
                 return Page();
             }
 
@@ -118,11 +107,23 @@ namespace iis.Pages.Users
             }
 
             return RedirectToPage("Index", new { area = "Users" });
-            //TODO doesn't work + add update role
-            //var result = await _userManager.UpdateAsync(User);
+        }
+
+        public async Task<IActionResult> OnPostChangePasswordAsync()
+        {
+            if (String.IsNullOrEmpty(Password))
+            {
+                ModelState.AddModelError("", "Password Cannot Be Empty");
+                return Page();
+            }
+            var user = await _context.Users.FirstAsync(user => user.Id == UserModel.Id);
+            var passwordHasher = _userManager.PasswordHasher;
+            var pw = passwordHasher.HashPassword(user, Password);
+            user.PasswordHash = pw;
 
 
-
+            var tt = await _context.SaveChangesAsync();
+            return RedirectToPage("Index", new { area = "Users" });
         }
     }
 }

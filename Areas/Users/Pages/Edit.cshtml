@@ -19,8 +19,8 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
-                            <label asp-for="UserModel.Name" class="control-label"></label>
-                            <input asp-for="UserModel.Name" class="form-control" />
+                            <label asp-for="UserModel.Name"  class="control-label"></label>
+                            <input type="text" asp-for="UserModel.Name" minlength="3" required class="form-control" />
                             <span asp-validation-for="UserModel.Name" class="text-danger"></span>
                         </div>
                         <div class="form-group">
@@ -28,7 +28,7 @@
 
                             @*<span style="color:red">Username already taken!</span>*@
 
-                            <input asp-for="UserModel.UserName" class="form-control" />
+                            <input type="text" asp-for="UserModel.UserName"  minlength="4" required class="form-control" />
                             <span asp-validation-for="UserModel.UserName" class="text-danger"></span>
                         </div>
                     </div>
@@ -49,14 +49,15 @@
                 <input type="hidden" asp-for="UserModel.Id" />
 
                 <div class="form-group">
-                    <label asp-for="Password" class="control-label">Password</label>
-                    <input type="password" asp-for="Password" style="width:16%;" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
+                   
+                    <input type="password" id="password" asp-for="Password" style="width:16%;" class="collapse" />
+                    <input class="btn btn-primary"  type="button" id="passwordBtn" value="Change Password"/>
+                    <input type="submit" class="collapse" asp-page-handler="ChangePassword" id="passwordSubmit"/>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="UserModel.PhoneNumber" class="control-label">Phone Number</label>
-                    <input asp-for="UserModel.PhoneNumber" style="width:16%;" class="form-control" />
+                    <input style="width:16%;" class="form-control" type="tel" pattern="(?:[+]{1}[0-9]{1,3})?[0-9]{3}[0-9]{3}[0-9]{3}" required asp-for="UserModel.PhoneNumber" />
                     <span asp-validation-for="UserModel.PhoneNumber" class="text-danger"></span>
                 </div>
                 @if (@Model.UserModel.Id != @HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier))
@@ -69,6 +70,7 @@
                 }
             </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group" style="margin-top:3%;">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -78,7 +80,45 @@
         <a asp-page="./Index">Back to List</a>
     </div>
 </div>
-
+<div id="modals">
+    <div id="pwDialog" title="Password Change">
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="name" class="form-label">Password</label>
+                    <input type="password" minlength="8" class="form-control" id="passwordHandle" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script>
+        document.getElementById("passwordBtn").onclick = function () {
+            $("#pwDialog").dialog("open");
+            return false;
+        }
+        $(function () {
+            $("#pwDialog").dialog({
+                autoOpen: false,
+                resizable: false,
+                height: "auto",
+                width: 450,
+                modal: true,
+                buttons: {
+                    "Change": function () {
+                        document.getElementById("password").value = document.getElementById("passwordHandle").value;
+                        document.getElementById("passwordSubmit").click();
+                        $(this).dialog("close");
+                    },
+                    "Cancel": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        });
+    </script>
 }
