@@ -1,0 +1,92 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+		.dec { font-family: monospace}
+    </style>
+</head>
+<body>
+
+<p style="color:green;font-weight: bold;">Všechno zelené jsou poznámky => smazat!!</p>
+
+<h1>Zvířecí útulek</h1>
+<dl>
+	<dt>Autoři</dt>
+	<dd>Vojtěch Bůbela 
+        <a href="mailto:xbubel08@stud.fit.vutbr.cz">xbubel08@stud.fit.vutbr.cz</a> -
+		Práce na stránkách aplikace + práce s rolemi a autentizací + filtrování a sorting
+	</dd>
+	<dd>Daniel Prudký 
+        <a href="mailto:xprudk08@stud.fit.vutbr.cz">xprudk08@stud.fit.vutbr.cz</a> - 
+		Práce na stránkách aplikace + nastavení databáze + práce s rolemi a autentizací
+	</dd>
+  <dd>Jakub Sychra 
+    <a href="mailto:xsychr06@stud.fit.vutbr.cz">xsychr06@stud.fit.vutbr.cz</a> - 
+		Práce na stránkách aplikace + instalace na server + nastavení cookies atd.
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd>Stránky - <a href="http://51.103.219.55/">http://51.103.219.55/</a></dd>
+    <dd>pgAdmin - <a href="http://51.103.219.55:5050/">http://51.103.219.55:5050/</a></dd>
+</dl>
+
+<h2>Uživatelé systému pro testování</h2>
+<table>
+<tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+<tr><td>admin</td><td>password</td><td>Admin</td></tr>
+<tr><td>jimmy</td><td>useruser</td><td>Caretaker</td></tr>
+<tr><td>john</td><td>useruser</td><td>Vet</td></tr>
+<tr><td>jenny</td><td>useruser</td><td>VerifiedUser</td></tr>
+<tr><td>eric</td><td>useruser</td><td>UnverifiedUser</td></tr>
+</table>
+
+<h3>Připojení do pgAdmin</h3>
+<table>
+<tr><th>Email</th><th>Heslo</th></tr>
+<tr><td>admin@iis.com</td><td>root</td></tr>
+</table>
+
+<p style="color:green">(Diagram případů užití není nutné vkládat, pokud IS implementuje role a případy užití definované zadáním.)</p> 
+
+<h3>Video</h3>
+
+<p style="color:green">Přiložte odkaz na komentované video demostrující použití informačního systému. Zaměřte se na případy užití definované zadáním (např. registrace uživatele, správa uživatelů a činnosti jednotlivých rolí). Video nahrajte například na VUT Google Drive, kde ho bude možné přímo spustit z odkazu.</p> 
+
+<h2>Implementace</h2>
+<p style="color:green">Stručná dokumentace k implementaci, která popisuje, které části projektu (např. PHP skripty) implementují jednotlivé případy použití.</p>
+
+<p>Projekt jsme se rozhodli implementovat pomocí <span class="dec">ASN.NET Core</span> a jako server jsme využili služeb <span class="dec">Azure</span> a <span class="dec">Docker</span>.
+Základní inicializace probíhá v souboru <span class="dec">Startup.cs</span>, který nastaví připojení k databázy, nastavení cookie, naseedování dat atd.
+Nastavení databáze je v souboru <span class="dec">/Data/DbContext.cs</span>, kde se nastavují vztahy tabulek a definují se tabulky. Aplikace používá i další tabulky,
+které jsme použili z frameworku <span class="dec">ASP.NET Core Identity</span> a do kterých se ukládají data o uživatelých.
+Přístup k tomuto frameworku je v <span class="dec">/Data/DbContext.cs</span> a <span class="dec">/Models/User.cs</span> pomocí dědění.
+Ostatní modely jsou také v <span class="dec">/Models</span>. Všechny stránky a jejich kontrolery se jsou uloženy ve složce <span class="dec">/Areas</span> a v nich jsou řešeny autorizační podmínky zobrazování a
+přístupu k elementům pomocí tagů <span class="dec">[Authorized]</span> s případným upřesněním rolí např:<span class="dec">[Authorize(Roles = "Admin, Vet")]</span>. Další podmínky zobrazování elementů podle rolí jsou v <span class="dec">*.cshtml</span> souborech.
+Tyto informace o uživateli jsou při běhu programu uloženy v <span class="dec">HttpContext</span>. Role jsou definovány v souboru <span class="dec">/Data/Roles.cs</span> pomocí klasického enumu a je k nim vytvořen dictionary 
+pro lepší práci s databází, autorizací i autentizací.</p>
+
+<h3>Databáze</h3>
+
+<img src="dbERD.jpg" height="500"/>
+
+<h2>Instalace</h2>
+<span style="color:green">
+Stručně popište: 
+<ul>
+<li>postup instalace na server,</li>
+<li>softwarové požadavky (verze PHP apod.),</li>
+<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
+</ul>
+</span>
+
+<h2>Známé problémy</h2>
+<p style="color:green">Zde popište, které body zadání nejsou implementovány a z jakého důvodu. Např. &bdquo;Z časových důvodů nebyla implementována správa uživatelů.&rdquo; Pomůžete tím zrychlit hodnocení, když neimplementované funkce nebudeme muset dlouze hledat.</p>
+
+</body>
+</html>
