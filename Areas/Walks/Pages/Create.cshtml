@@ -4,6 +4,20 @@
 @model iis.Pages.Walks.CreateModel
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+            lDate.value = "@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")";
+            gDate.value = "@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")";
+
+            function validate() {
+                var lesser = document.getElementById("lDate");
+                var greater = document.getElementById("gDate");
+
+                if (lesser.value > greater.value) {
+                    alert("Start Time should not begin after Finish Time");
+                    lesser.value = greater.value;
+                }
+            }
+    </script>
 }
 @{
     ViewData["Title"] = "Create";
@@ -36,13 +50,13 @@
                 <input type="hidden" asp-for="Walk.UserId" value="@HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)" />
             }
             <div class="form-group">
-	            <label asp-for="Walk.StartTime" class="control-label"></label>
-	            <input asp-for="Walk.StartTime" class="form-control"/>
+	            <label asp-for="Walk.StartTime" class="control-label">Start Time</label>
+	            <input asp-for="Walk.StartTime" class="form-control" id="lDate" onfocusout="validate();"/>
 	            <span asp-validation-for="Walk.StartTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-	            <label asp-for="Walk.FinishTime" class="control-label"></label>
-	            <input asp-for="Walk.FinishTime" class="form-control" />
+	            <label asp-for="Walk.FinishTime" class="control-label">Finish Time</label>
+	            <input asp-for="Walk.FinishTime" class="form-control" id="gDate" onfocusout="validate();"/>
 	            <span asp-validation-for="Walk.FinishTime" class="text-danger"></span>
             </div>
             @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker")))
