@@ -37,7 +37,7 @@
 					            <a class="nav-link text-dark" asp-area="VeterinaryRecords" asp-page="/Index">Veterinary Records</a>
 				            </li>
 			            }
-			            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+			            @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker")))
 			            {
 				            <li class="nav-item">
 					            <a class="nav-link text-dark" asp-area="Users" asp-page="/Index">Users</a>

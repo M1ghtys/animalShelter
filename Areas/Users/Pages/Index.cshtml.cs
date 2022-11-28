@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace iis.Pages.Users
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Caretaker")]
     public class IndexModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
@@ -64,13 +64,22 @@ namespace iis.Pages.Users
                     Users = users.ToArray();
                     break;
             }
-            
+
+            users = Users.ToList();
+
             //get roles after filter => correct order
             foreach (var u in Users)
             {
                 var role = await _facade.GetUserRoleAsync(u.Id);
+                if (User.IsInRole("Caretaker") && role != Role.UnverifiedUser)
+                {
+                    users.Remove(u);
+                    continue;
+                }
                 Roles.Add(role.ToString());
             }
+
+            Users = users;
 
             return Page();
         }
@@ -78,6 +87,28 @@ namespace iis.Pages.Users
         public IActionResult OnPostCreate()
         {
             return RedirectToPage("Create");
+        }
+
+        public async Task<IActionResult> OnPostVerifyAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var result = await _userManager.RemoveFromRolesAsync(user, roles);
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot remove user roles");
+                return Page();
+            }
+            result = await _userManager.AddToRoleAsync(user, "VerifiedUser");
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot add roles to user");
+                return Page();
+            }
+
+            return RedirectToPage("Index");
         }
     }
 }

@@ -8,14 +8,15 @@
 <form method="post">
     <div class=row>
         <div class=col-sm-8>
-            <h1>List of users</h1>
+            <h1>List of @(User.IsInRole("Caretaker") ? "Users Awaiting Verification" : "Users") </h1>
         </div>
         <div class=col-sm-4 align=right>
 
-
+            @if (User.IsInRole("Admin"))
+            {
             @Html.AntiForgeryToken()
             <button type="submit" asp-page-handler="Create">Create New</button>
-
+            }
         </div>
     </div>
 
@@ -76,9 +77,19 @@
                         @Html.DisplayFor(modelItem => Model.Users[i].PhoneNumber)
                     </td>
                     <td>
-                        <a asp-page="./Edit" asp-route-id="@Model.Users[i].Id">Edit</a>
-                        <a asp-page="./Delete" asp-route-id="@Model.Users[i].Id">Delete</a>
-                        <a asp-page="./Details" asp-route-id="@Model.Users[i].Id">Details</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-page="./Edit" asp-route-id="@Model.Users[i].Id">Edit</a>
+                            <a asp-page="./Delete" asp-route-id="@Model.Users[i].Id">Delete</a>
+                            <a asp-page="./Details" asp-route-id="@Model.Users[i].Id">Details</a>
+                        }
+                        else
+                        {
+                            <form method="post">
+                                <button type="submit" asp-page-handler="Verify" asp-route-userId="@Model.Users[i].Id">Verify</button>
+                            </form>
+                            
+                        }
                     </td>
                 </tr>
             }

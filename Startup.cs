@@ -131,9 +131,7 @@ namespace iis
 
             dbInitializer.Migrate();
             
-            //TODO generuje databázy znovu a znovu => jak funguje databáze a smazat to!!
             dbInitializer.SeedRoles();
-            // //TODO change password to secret
             dbInitializer.SeedAdminUser("password");
             dbInitializer.SeedUser();
             dbInitializer.SeedAnimals();
