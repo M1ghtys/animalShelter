@@ -30,52 +30,52 @@
 </form>
 
 <div id="data">
-<table class="table">
-	<thead>
-	<tr>
-		<th scope="col" id="animalname" class="btn-primary">
-			@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Animal.Name)
-		</th>
-		<th scope="col" id="date" class="btn-primary">
-			@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Date)
-		</th>
-		<th scope="col">
-			@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Weight)
-		</th>
-		<th scope="col">
-			@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Details)
-		</th>
-		<th></th>
-	</tr>
-	</thead>
-	<tbody>
-	@for (int i = 0; i < Model.VeterinaryRecords.Count; i++)
-	{
-		<tr>
-			<td>
-				@Html.DisplayFor(modelItem => Model.VeterinaryRecords[i].Animal.Name)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.VeterinaryRecords[i].Date)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.VeterinaryRecords[i].Weight)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.VeterinaryRecords[i].Details)
-			</td>
-			<td>
-				@if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker") || User.IsInRole("Vet")))
-				{
-					<a asp-page="./Edit" asp-route-id="@Model.VeterinaryRecords[i].Id">Edit</a>
-					<a asp-page="./Delete" asp-route-id="@Model.VeterinaryRecords[i].Id">Delete</a>
-				}
-				<a asp-page="./Details" asp-route-id="@Model.VeterinaryRecords[i].Id">Details</a>
-			</td>
-		</tr>
-	}
-	</tbody>
-</table>
+    <table class="table mt-4">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col" id="animalname" class="btn-primary">
+                    @Html.DisplayNameFor(model => model.VeterinaryRecords[0].Animal.Name)
+                </th>
+                <th scope="col" id="date" class="btn-primary">
+                    @Html.DisplayNameFor(model => model.VeterinaryRecords[0].Date)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.VeterinaryRecords[0].Weight)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.VeterinaryRecords[0].Details)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.VeterinaryRecords.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.VeterinaryRecords[i].Animal.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.VeterinaryRecords[i].Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.VeterinaryRecords[i].Weight)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.VeterinaryRecords[i].Details)
+                    </td>
+                    <td>
+                        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker") || User.IsInRole("Vet")))
+                        {
+                            <a asp-page="./Edit" asp-route-id="@Model.VeterinaryRecords[i].Id">Edit</a>
+                            <a asp-page="./Delete" asp-route-id="@Model.VeterinaryRecords[i].Id">Delete</a>
+                        }
+                        <a asp-page="./Details" asp-route-id="@Model.VeterinaryRecords[i].Id">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 @section Scripts {

@@ -50,7 +50,6 @@ namespace iis.Pages.Walks
 
             walks = walks.Where(v => v.Animal.Name.ToLower().Contains(search)).ToList();
 
-
             switch (order)
             {
                 case 1:
@@ -82,6 +81,34 @@ namespace iis.Pages.Walks
         public IActionResult OnPostCreate()
         {
             return RedirectToPage("Create");
+        }
+
+        public async Task<IActionResult> OnPostReserveAsync(string walkId)
+        {
+            if(walkId == null)
+            {
+                throw new Exception("Error occured whilst loading data");
+            }
+            var userId = _context.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name).Result.Id;
+            var walk = await _context.Walk.FirstOrDefaultAsync(x => x.Id == Guid.Parse(walkId));
+            walk.UserId = Guid.Parse(userId);
+            _context.SaveChanges();
+
+            return RedirectToPage("./Index");
+        }
+
+        public async Task<IActionResult> OnPostVerifyAsync(string walkId)
+        {
+            if (walkId == null)
+            {
+                throw new Exception("Error occured whilst loading data");
+            }
+
+            var walk = await _context.Walk.FirstOrDefaultAsync(x => x.Id == Guid.Parse(walkId));
+            walk.IsVerified = true;
+            _context.SaveChanges();
+
+            return RedirectToPage("./Index");
         }
     }
 }

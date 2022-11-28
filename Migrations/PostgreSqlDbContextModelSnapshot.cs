@@ -340,6 +340,9 @@ namespace iis.Migrations
                     b.Property<DateTime>("FinishTime")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp without time zone");
 

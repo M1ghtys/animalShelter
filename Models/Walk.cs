@@ -21,5 +21,6 @@ namespace iis.Models
         public DateTime FinishTime { get; set; }
         public WalkState State { get; set; }
         public string Comment { get; set; }
+        public bool IsVerified { get; set; }
     }
 }

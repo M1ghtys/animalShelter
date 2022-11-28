@@ -28,11 +28,14 @@
 </form>
 
 <div id="data">
-<table class="table">
-    <thead>
+<table class="table mt-4">
+    <thead class="table-dark">
         <tr>
             <th scope="col" id="animalname" class="btn-primary">
                 Animal Name
+            </th>
+            <th>
+                Verified
             </th>
             <th scope="col" id="username" class="btn-primary">
                 Volunteer Name
@@ -63,9 +66,27 @@
 			    <td>
 				    @Html.DisplayFor(modelItem => Model.Walks[i].Animal.Name)
 			    </td>
-			    <td>
-				    @Html.DisplayFor(modelItem => Model.Walks[i].User.Name)
-			    </td>
+                <td>
+                    @(Model.Walks[i].IsVerified ? "Verified" : "Not Verified")
+                </td>
+                <td>
+                    @if (Model.Walks[i].UserId == Guid.Empty)
+                    {
+                        <form method="post">
+                            <button type="submit" asp-page-handler="Reserve" asp-route-walkId="@Model.Walks[i].Id">Reserve Walk</button>
+                        </form>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => Model.Walks[i].User.Name)
+                        if (User.IsInRole("Caretaker") && Model.Walks[i].IsVerified == false)
+                        {
+                        <form method="post">
+                            <button type="submit" asp-page-handler="Verify" asp-route-walkId="@Model.Walks[i].Id">Verify</button>
+                        </form>
+                        }
+                    }
+                </td>
 			    <td>
 				    @Html.DisplayFor(modelItem => Model.Walks[i].StartTime)
 			    </td>
