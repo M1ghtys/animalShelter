@@ -8,6 +8,10 @@
             lDate.value = "@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")";
             gDate.value = "@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")";
 
+            $('#userSelect').change(function () {
+                document.getElementById("userInput").value = $(this).val();
+            })
+
             function validate() {
                 var lesser = document.getElementById("lDate");
                 var greater = document.getElementById("gDate");
@@ -39,9 +43,16 @@
             @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker")))
             {
 	            <div class="form-group">
-		            <label asp-for="Walk.UserId" class="control-label">User</label>
-		            <select asp-for="Walk.UserId" asp-items="@(new SelectList(Model.Users, nameof(iis.Models.User.Id), nameof(iis.Models.User.UserName)))" class="form-control"></select>
-		            <span asp-validation-for="Walk.UserId" class="text-danger"></span>
+		            <label for="userSelect" class="control-label">User</label>
+		            
+                <select id="userSelect" class="form-control">
+                    <option>None</option>
+                    @foreach (var user in Model.Users)
+                    {
+                        <option>@user.UserName</option>
+                    }
+                </select>
+                <input style="visibility:collapse" asp-for="SelectUser" id="userInput"/>
 	            </div>
             }
             else
