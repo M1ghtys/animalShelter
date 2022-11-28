@@ -1,24 +1,12 @@
 ﻿@page
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model iis.Pages.VeterinaryRecords.IndexModel
 
 @{
     ViewData["Title"] = "VeterinaryRecords";
 }
 
-@section Scripts {
-	<script type="text/javascript">
-	var order = "Date";
-	const  updateFlag = function() {
-		window.history.pushState('VeterinaryRecords','', '?SearchString='+
-		document.getElementById('search').value + "&sortOrder=" + order);
-		alert("here");
-		$('#data').load(location.href + "#data");
-	};
-
-	$('#search').on('input', updateFlag);
-</script>
-}
-
+<form method="post">
 <div class=row>
 	<div class=col-sm-8>
 		<h1>Veterinary Records</h1>
@@ -26,25 +14,18 @@
 	@if (User.IsInRole("Caretaker"))
 	{
 		<div class=col-sm-4 align=right>
-			<p>
-				<form method="post">
+
 					@Html.AntiForgeryToken()
 					<button type="submit" asp-page-handler="Create">Create New</button>
-				</form>
-			</p>
 		</div>
 	}
-</div>
+	</div>
 
 
-<form asp-page="./Index" method="get">
-    <div class="form-actions">
-        <p>
-            Find by name:
-            <input id="search" type="text" name="SearchString" value="@Model.CurrentFilter" />
-            <input type="submit" value="Search" class="btn btn-primary" /> |
-            <a asp-page="./Index">Back to full List</a>
-        </p>
+    <div class="form-group row" style="float:left">
+        <label for="search" class="col-sm-auto col-lg-auto col-form-label font-weight-bold">Search Animal name</label>
+        <input class="form-control" id="search" style="width:40%" />
+
     </div>
 </form>
 
@@ -52,54 +33,73 @@
 <table class="table">
 	<thead>
 	<tr>
-		<th>
-			<a asp-page="./Index" asp-route-sortOrder="@Model.AnimalNameSort">
-				@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Animal.Name)
-			</a>
+		<th scope="col" id="animalname" class="btn-primary">
+			@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Animal.Name)
 		</th>
-		<th>
-			<a asp-page="./Index" asp-route-sortOrder="@Model.DateSort">
-				@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Date)
-			</a>
+		<th scope="col" id="date" class="btn-primary">
+			@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Date)
 		</th>
-		<th>
+		<th scope="col">
 			@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Weight)
 		</th>
-		<th>
+		<th scope="col">
 			@Html.DisplayNameFor(model => model.VeterinaryRecords[0].Details)
 		</th>
 		<th></th>
 	</tr>
 	</thead>
 	<tbody>
-	@foreach (var item in Model.VeterinaryRecords)
+	@for (int i = 0; i < Model.VeterinaryRecords.Count; i++)
 	{
 		<tr>
 			<td>
-				@Html.DisplayFor(modelItem => item.Animal.Name)
+				@Html.DisplayFor(modelItem => Model.VeterinaryRecords[i].Animal.Name)
 			</td>
 			<td>
-				@Html.DisplayFor(modelItem => item.Date)
+				@Html.DisplayFor(modelItem => Model.VeterinaryRecords[i].Date)
 			</td>
 			<td>
-				@if (item.Weight > 0.0)
-				{
-						@Html.DisplayFor(modelItem => item.Weight)
-				}
+				@Html.DisplayFor(modelItem => Model.VeterinaryRecords[i].Weight)
 			</td>
 			<td>
-				@Html.DisplayFor(modelItem => item.Details)
+				@Html.DisplayFor(modelItem => Model.VeterinaryRecords[i].Details)
 			</td>
 			<td>
 				@if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker") || User.IsInRole("Vet")))
 				{
-					<a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
-					<a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+					<a asp-page="./Edit" asp-route-id="@Model.VeterinaryRecords[i].Id">Edit</a>
+					<a asp-page="./Delete" asp-route-id="@Model.VeterinaryRecords[i].Id">Delete</a>
 				}
-				<a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+				<a asp-page="./Details" asp-route-id="@Model.VeterinaryRecords[i].Id">Details</a>
 			</td>
 		</tr>
 	}
 	</tbody>
 </table>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var order = 0;
+        var selectedDelete = 0;
+
+        const updateFlags = function () {
+            window.history.pushState('Users', '', '?search=' + document.getElementById('search').value + "&order=" + order);
+            $('#data').load(location.href + " #data");
+        };
+
+        $('#search').on('input', updateFlags);
+
+        $(document).on('click', '#animalname', () => {
+            order = order == 1 ? -1 : 1;
+            updateFlags();
+        });
+
+        $(document).on('click', '#date', () => {
+            order = order == 2 ? -2 : 2;
+            updateFlags();
+        });
+
+    </script>
+}

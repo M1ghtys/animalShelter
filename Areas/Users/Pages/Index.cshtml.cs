@@ -64,7 +64,7 @@ namespace iis.Pages.Users
                     Users = users.ToArray();
                     break;
             }
-
+            
             //get roles after filter => correct order
             foreach (var u in Users)
             {

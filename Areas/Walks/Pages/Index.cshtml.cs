@@ -28,55 +28,55 @@ namespace iis.Pages.Walks
         public string CurrentFilter { get; set; }
         public string CurrentFilterV { get; set; }
         public IList<Walk> Walks { get;set; }
-        
 
-        public async Task OnGetAsync(string sortOrder, string searchString, string searchStringV)
+        public async Task<IActionResult> OnGetAsync(int? order, string search)
         {
-            
-            StartTimeSort = String.IsNullOrEmpty(sortOrder) ? "time_desc" : "";
-            StateSort = sortOrder == "State" ? "State_desc" : "State";
-            
-            IList<Walk> walkOrder = _context.Walk.ToList();
-            CurrentFilter = searchString;
-            CurrentFilterV = searchStringV;
+            int orderBy = order.HasValue ? order.Value : 0;
 
-            foreach (var v in walkOrder)
+            string searchParams = search == null ? string.Empty : search.ToLower();
+
+            return await LoadData(orderBy, searchParams);
+        }
+
+        private async Task<IActionResult> LoadData(int order, string search)
+        {
+            var walks = _context.Walk.ToList();
+
+            foreach (var v in walks)
             {
                 v.Animal = await _context.Animal.FirstOrDefaultAsync(a => a.Id == v.AnimalId);
-                v.User = await _context.Users.FirstOrDefaultAsync(n => n.Id == v.UserId.ToString());
+                v.User = await _context.Users.FirstOrDefaultAsync(a => a.Id == v.UserId.ToString());
             }
 
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                walkOrder = walkOrder.Where(s => s.Animal.Name.Contains(searchString)).ToList();
-            }
+            walks = walks.Where(v => v.Animal.Name.ToLower().Contains(search)).ToList();
 
-            if (!String.IsNullOrEmpty(searchStringV))
-            {
-                walkOrder = walkOrder.Where(s => s.User.Name.Contains(searchStringV)).ToList();
-            }
 
-            switch (sortOrder)
+            switch (order)
             {
-                case "time_desc":
-                    Walks = walkOrder.OrderByDescending(s => s.StartTime).ToList();
+                case 1:
+                    Walks = walks.OrderBy(n => n.User.Name).ToArray();
                     break;
-                case "State":
-                    Walks = walkOrder.OrderBy(s => s.State).ToList();
+                case -1:
+                    Walks = walks.OrderByDescending(n => n.User.Name).ToArray();
                     break;
-                case "State_desc":
-                    Walks = walkOrder.OrderByDescending(s => s.State).ToList();
+                case 2:
+                    Walks = walks.OrderBy(n => n.StartTime).ToArray();
+                    break;
+                case -2:
+                    Walks = walks.OrderByDescending(n => n.StartTime).ToArray();
+                    break;
+                case 3:
+                    Walks = walks.OrderBy(n => n.Animal.Name).ToArray();
+                    break;
+                case -3:
+                    Walks = walks.OrderByDescending(n => n.Animal.Name).ToArray();
                     break;
                 default:
-                    Walks = walkOrder.OrderBy(s => s.StartTime).ToList();
+                    Walks = walks.ToArray();
                     break;
             }
-            
-            foreach (var w in Walks)
-            {
-                w.Animal = await _context.Animal.FirstOrDefaultAsync(a => a.Id == w.AnimalId);
-                w.User = await _context.Users.FirstOrDefaultAsync(v => v.Id == w.UserId.ToString());
-            }
+
+            return Page();
         }
 
         public IActionResult OnPostCreate()

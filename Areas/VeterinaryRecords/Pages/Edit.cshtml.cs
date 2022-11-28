@@ -14,7 +14,7 @@ using System.Data;
 
 namespace iis.Pages.VeterinaryRecords
 {
-    [Authorize(Roles = "Admin,Vet,Caretaker")]
+    [Authorize(Roles = "Vet")]
     public class EditModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
