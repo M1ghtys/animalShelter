@@ -12,7 +12,7 @@ using System.Data;
 
 namespace iis.Pages.Walks
 {
-    [Authorize(Roles = "Admin,Vet,Caretaker,VerifiedUser")]
+    [Authorize(Roles = "Admin,Caretaker")]
     public class CreateModel : PageModel
     {
         private readonly iis.Data.DbContext _context;

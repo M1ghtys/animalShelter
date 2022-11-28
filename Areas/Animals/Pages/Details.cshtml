@@ -130,6 +130,7 @@
 	    </dt>
 		<dd class="col-sm-10">
 		@foreach (var item in Model.Animal.VeterinaryRecords) {
+			@if (item.Weight != 0) {
 		    <table class="table">
 				    <tr>
 					    @Html.DisplayFor(modelItem => item.Date)
@@ -143,6 +144,7 @@
 				    </tr>
 		    </table>
 			}
+		}
 		</dd>	
     </dl>
 </div>
