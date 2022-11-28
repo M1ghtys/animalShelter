@@ -3,76 +3,112 @@
 @model iis.Pages.Users.IndexModel
 
 @{
-	ViewData["Title"] = "Index";
+    ViewData["Title"] = "Index";
 }
+<form method="post">
+    <div class=row>
+        <div class=col-sm-8>
+            <h1>List of users</h1>
+        </div>
+        <div class=col-sm-4 align=right>
 
-<div class=row>
-	<div class=col-sm-8>
-		<h1>List of users</h1>
-	</div>
-	<div class=col-sm-4 align=right>
-		<p>
-			<form method="post">
-				@Html.AntiForgeryToken()
-				<button type="submit" asp-page-handler="Create">Create New</button>
-			</form>
-		</p>
-	</div>
+
+            @Html.AntiForgeryToken()
+            <button type="submit" asp-page-handler="Create">Create New</button>
+
+        </div>
+    </div>
+
+    <div class="form-group row" style="float:left">
+        <label for="search" class="col-sm-auto col-lg-auto col-form-label font-weight-bold">Search Username</label>
+        <input class="form-control" id="search" style="width:40%" />
+
+    </div>
+
+
+</form>
+
+<div id="data">
+    <table class="table mt-5">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Users[0].Name)
+                </th>
+                <th scope="col" id="username" class="btn-primary">
+                    User Name
+                </th>
+                <th scope="col">
+                    Roles
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Users[0].Address)
+                </th>
+                <th scope="col" id="email" class="btn-primary">
+                    @Html.DisplayNameFor(model => model.Users[0].Email)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Users[0].PhoneNumber)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Users.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.Users[i].Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.Users[i].UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => Model.Roles[i])
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.Users[i].Address)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.Users[i].Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.Users[i].PhoneNumber)
+                    </td>
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@Model.Users[i].Id">Edit</a>
+                        <a asp-page="./Delete" asp-route-id="@Model.Users[i].Id">Delete</a>
+                        <a asp-page="./Details" asp-route-id="@Model.Users[i].Id">Details</a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
 </div>
 
-<table class="table">
-	<thead>
-	<tr>
-		<th>
-			@Html.DisplayNameFor(model => model.Users[0].Name)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Users[0].UserName)
-		</th>
-		<th>
-			Roles
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Users[0].Address)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Users[0].Email)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Users[0].PhoneNumber)
-		</th>
-		<th></th>
-	</tr>
-	</thead>
-	<tbody>
-		@for (int i = 0; i < Model.Users.Count; i++)
-		{
-			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => Model.Users[i].Name)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => Model.Users[i].UserName)
-				</td>
-				<td>
-					@Html.DisplayFor(model => Model.Roles[i])
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => Model.Users[i].Address)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => Model.Users[i].Email)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => Model.Users[i].PhoneNumber)
-				</td>
-				<td>
-					<a asp-page="./Edit" asp-route-id="@Model.Users[i].Id">Edit</a>
-					<a asp-page="./Delete" asp-route-id="@Model.Users[i].Id">Delete</a>
-					<a asp-page="./Details" asp-route-id="@Model.Users[i].Id">Details</a>
-				</td>
-			</tr>
-		}
-	
-	</tbody>
-</table>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var order = 0;
+        var selectedDelete = 0;
+
+        const updateFlags = function () {
+            window.history.pushState('Users', '', '?search=' + document.getElementById('search').value + "&order=" + order);
+            $('#data').load(location.href + " #data");
+        };
+
+        $('#search').on('input', updateFlags);
+
+        $(document).on('click', '#username', () => {
+            order = order == 1 ? -1 : 1;
+            updateFlags();
+        });
+
+        $(document).on('click', '#email', () => {
+            order = order == 2 ? -2 : 2;
+            updateFlags();
+        });
+
+    </script>
+}
