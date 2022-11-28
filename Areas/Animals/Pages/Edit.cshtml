@@ -5,9 +5,7 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Animal</h4>
+<h2>Edit Animal</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -16,17 +14,17 @@
             <input type="hidden" asp-for="Animal.Id" />
             <div class="form-group">
                 <label asp-for="Animal.ChipNumber" class="control-label"></label>
-                <input asp-for="Animal.ChipNumber" class="form-control" />
+                <input asp-for="Animal.ChipNumber" minlength="11" maxlength="11" required class="form-control" />
                 <span asp-validation-for="Animal.ChipNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Animal.Name" class="control-label"></label>
-                <input asp-for="Animal.Name" class="form-control" />
+                <input asp-for="Animal.Name" required class="form-control" />
                 <span asp-validation-for="Animal.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Animal.Breed" class="control-label"></label>
-                <input asp-for="Animal.Breed" class="form-control" />
+                <input asp-for="Animal.Breed" required class="form-control" />
                 <span asp-validation-for="Animal.Breed" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -36,12 +34,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Animal.Birth" class="control-label"></label>
-                <input asp-for="Animal.Birth" class="form-control" />
+                <input asp-for="Animal.Birth" id="lDate" onfocusout="validate();"  class="form-control" />
                 <span asp-validation-for="Animal.Birth" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Animal.DateOfArrival" class="control-label"></label>
-                <input asp-for="Animal.DateOfArrival" class="form-control" />
+                <input asp-for="Animal.DateOfArrival" id="gDate" onfocusout="validate();"  class="form-control" />
                 <span asp-validation-for="Animal.DateOfArrival" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -70,9 +68,29 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="Animal.Territory" class="control-label"></label>
-                <select asp-for="Animal.Territory" asp-items="Html.GetEnumSelectList<Territory>()" class="form-control"></select>
-                <span asp-validation-for="Animal.Territory" class="text-danger"></span>
+	            <label asp-for="Animal.Territory" class="control-label"></label>
+	            <select asp-for="Animal.Territory" asp-items="Html.GetEnumSelectList<Territory>()" class="form-control"></select>
+	            <span asp-validation-for="Animal.Territory" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+	            <label class="form-check-label">
+		            <input class="form-check-input" asp-for="Animal.Tattoo" /> @Html.DisplayNameFor(model => model.Animal.Tattoo)
+	            </label>
+            </div>
+            <div class="form-group form-check">
+	            <label class="form-check-label">
+		            <input class="form-check-input" asp-for="Animal.Castration" /> @Html.DisplayNameFor(model => model.Animal.Castration)
+	            </label>
+            </div>
+            <div class="form-group form-check">
+	            <label class="form-check-label">
+		            <input class="form-check-input" asp-for="Animal.Handicapped" /> @Html.DisplayNameFor(model => model.Animal.Handicapped)
+	            </label>
+            </div>
+            <div class="form-group form-check">
+	            <label class="form-check-label">
+		            <input class="form-check-input" asp-for="Animal.Vaccinated" /> @Html.DisplayNameFor(model => model.Animal.Vaccinated)
+	            </label>
             </div>
             <div class="form-group">
                 <label asp-for="Photo" class="control-label">Photo url to add:</label>
@@ -103,4 +121,15 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+            function validate() {
+                var lesser = document.getElementById("lDate");
+                var greater = document.getElementById("gDate");
+
+                if (lesser.value > greater.value) {
+                    alert("Date of Arrival should not be before Birth");
+                    lesser.value = greater.value;
+                }
+            }
+</script>
 }

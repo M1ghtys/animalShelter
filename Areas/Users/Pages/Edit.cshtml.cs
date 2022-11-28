@@ -10,9 +10,13 @@ using iis.Data;
 using iis.Facades;
 using iis.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace iis.Pages.Users
 {
+    [Authorize]
     public class EditModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
@@ -27,10 +31,20 @@ namespace iis.Pages.Users
         }
 
         [BindProperty]
-        public User User { get; set; }
+        public User UserModel { get; set; }
         [BindProperty]
         public Role Role { get; set; }
+        [BindProperty]
+        public string Password { get; set; }
+        [BindProperty]
+        [Required]
+        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage = "Invalid Email")]
+        public string Email { get; set; }
+        [BindProperty]
+        [Required]
+        [RegularExpression(@"(?:[+]{1}[0-9]{2,3})?[0-9]{3}[0-9]{3}[0-9]{3}", ErrorMessage = "Invalid Phone Number")]
 
+        public string PhoneNumber { get; set; }
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
             if (id == null || !_facade.UserExists(id))
@@ -38,13 +52,18 @@ namespace iis.Pages.Users
                 return NotFound();
             }
 
-            User = await _context.Users.FirstOrDefaultAsync(m => m.Id == id.ToString());
-            Role = await _facade.GetUserRoleAsync(id);
-
-            if (User == null)
+            UserModel = await _context.Users.FirstOrDefaultAsync(m => m.Id == id.ToString());
+            //UserModel.Role = await _facade.GetUserRoleAsync(id.ToString());
+           
+            if (UserModel == null)
             {
                 return NotFound();
             }
+
+            Email = UserModel.Email;
+            PhoneNumber = UserModel.PhoneNumber;
+
+            Role = await _facade.GetUserRoleAsync(UserModel.Id);
 
             return Page();
         }
@@ -58,28 +77,65 @@ namespace iis.Pages.Users
                 return Page();
             }
 
-            //TODO doesn't work + add update role
-            //var result = await _userManager.UpdateAsync(User);
-            //if (result.Succeeded)
-            //    return RedirectToAction("Index");
+            var duplicate = await _facade.UsernameExists(UserModel);
+            if (duplicate)
+            {
+                return Page();
+            }
+           
+            var user = await _context.Users.FirstAsync(user => user.Id == UserModel.Id);
+            user.Name = UserModel.Name;
+            user.UserName = UserModel.UserName;
+            user.Address = UserModel.Address;
+            user.PhoneNumber = PhoneNumber;
+            user.Email = Email;
+            
 
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!_facade.UserExists(Guid.Parse(User.Id)))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
+            var savingResult = await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Index");
+            if (savingResult == 0)
+            {
+                ModelState.AddModelError("", "No Change Was Made");
+                return Page();
+            }
+
+            
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if (roles.FirstOrDefault() != Role.ToString())
+            {
+                var result = await _userManager.RemoveFromRolesAsync(user, roles);
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", "Cannot remove user roles");
+                    return Page();
+                }
+                result = await _userManager.AddToRoleAsync(user, Role.ToString());
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", "Cannot add roles to user");
+                    return Page();
+                }
+            }
+
+            return RedirectToPage("Index", new { area = "Users" });
+        }
+
+        public async Task<IActionResult> OnPostChangePasswordAsync()
+        {
+            if (String.IsNullOrEmpty(Password))
+            {
+                ModelState.AddModelError("", "Password Cannot Be Empty");
+                return Page();
+            }
+            var user = await _context.Users.FirstAsync(user => user.Id == UserModel.Id);
+            var passwordHasher = _userManager.PasswordHasher;
+            var pw = passwordHasher.HashPassword(user, Password);
+            user.PasswordHash = pw;
+
+
+            var tt = await _context.SaveChangesAsync();
+            return RedirectToPage("Index", new { area = "Users" });
         }
     }
 }

@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using iis.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Security.Claims;
 
 namespace iis.Pages.Walks
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Caretaker,Vet,VerifiedUser")]
     public class IndexModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
@@ -24,47 +26,91 @@ namespace iis.Pages.Walks
         public string FinishTimeSort { get; set; }
         public string StateSort { get; set; }
         public string CurrentFilter { get; set; }
-        public string CurrentSort { get; set; }
-        public IList<Walk> Walks { get;set; }
-        
+        public string CurrentFilterV { get; set; }
+        public List<Walk> Walks { get;set; }
 
-        public async Task OnGetAsync(string sortOrder)
+        public async Task<IActionResult> OnGetAsync(int? order, string search)
         {
-            
-            StartTimeSort = String.IsNullOrEmpty(sortOrder) ? "time_desc" : "";
-            StateSort = sortOrder == "State" ? "State_desc" : "State";
+            int orderBy = order.HasValue ? order.Value : 0;
 
-            IQueryable<Walk> walkOrder = from s in _context.Walk
-                                         select s;
+            string searchParams = search == null ? string.Empty : search.ToLower();
 
-            switch (sortOrder)
+            return await LoadData(orderBy, searchParams);
+        }
+
+        private async Task<IActionResult> LoadData(int order, string search)
+        {
+            var walks = _context.Walk.ToList();
+
+            foreach (var v in walks)
             {
-                case "time_desc":
-                    walkOrder = walkOrder.OrderByDescending(s => s.StartTime);
+                v.Animal = await _context.Animal.FirstOrDefaultAsync(a => a.Id == v.AnimalId);
+                v.User = await _context.Users.FirstOrDefaultAsync(a => a.Id == v.UserId.ToString());
+            }
+
+            walks = walks.Where(v => v.Animal.Name.ToLower().Contains(search)).ToList();
+
+            switch (order)
+            {
+                case 1:
+                    Walks = walks.Where(n => n.User == null).ToList();
+                    Walks.AddRange(walks.Where(n => n.User != null).OrderBy(n => n.User.Name).ToList());
                     break;
-                case "State":
-                    walkOrder = walkOrder.OrderBy(s => s.State);
+                case -1:
+                    Walks = walks.Where(n => n.User != null).OrderByDescending(n => n.User.Name).ToList();
+                    Walks.AddRange(walks.Where(n => n.User == null).ToList());
                     break;
-                case "State_desc":
-                    walkOrder = walkOrder.OrderByDescending(s => s.State);
+                case 2:
+                    Walks = walks.OrderBy(n => n.StartTime).ToList();
+                    break;
+                case -2:
+                    Walks = walks.OrderByDescending(n => n.StartTime).ToList();
+                    break;
+                case 3:
+                    Walks = walks.OrderBy(n => n.Animal.Name).ToList();
+                    break;
+                case -3:
+                    Walks = walks.OrderByDescending(n => n.Animal.Name).ToList();
                     break;
                 default:
-                    walkOrder = walkOrder.OrderBy(s => s.StartTime);
+                    Walks = walks.ToList();
                     break;
             }
 
-            Walks = await walkOrder.AsNoTracking().ToListAsync();
-
-            foreach (var w in Walks)
-            {
-                w.Animal = await _context.Animal.FirstOrDefaultAsync(a => a.Id == w.AnimalId);
-                w.User = await _context.Users.FirstOrDefaultAsync(v => v.Id == w.UserId.ToString());
-            }
+            return Page();
         }
 
         public IActionResult OnPostCreate()
         {
             return RedirectToPage("Create");
+        }
+
+        public async Task<IActionResult> OnPostReserveAsync(string walkId)
+        {
+            if(walkId == null)
+            {
+                throw new Exception("Error occured whilst loading data");
+            }
+            var userId = _context.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name).Result.Id;
+            var walk = await _context.Walk.FirstOrDefaultAsync(x => x.Id == Guid.Parse(walkId));
+            walk.UserId = Guid.Parse(userId);
+            _context.SaveChanges();
+
+            return RedirectToPage("./Index");
+        }
+
+        public async Task<IActionResult> OnPostVerifyAsync(string walkId)
+        {
+            if (walkId == null)
+            {
+                throw new Exception("Error occured whilst loading data");
+            }
+
+            var walk = await _context.Walk.FirstOrDefaultAsync(x => x.Id == Guid.Parse(walkId));
+            walk.IsVerified = true;
+            _context.SaveChanges();
+
+            return RedirectToPage("./Index");
         }
     }
 }

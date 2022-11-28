@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -22,19 +25,19 @@
 			            <li class="nav-item">
 				            <a class="nav-link text-dark" asp-area="Animals" asp-page="/Index">Animals</a>
 			            </li>
-			            @if (User.Identity.IsAuthenticated)
+			            @if (User.Identity.IsAuthenticated && !User.IsInRole("UnverifiedUser"))
 			            {
 				            <li class="nav-item">
 					            <a class="nav-link text-dark" asp-area="Walks" asp-page="/Index">Walks</a>
 				            </li>
 			            }
-			            @if (User.Identity.IsAuthenticated)
+						@if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker") || User.IsInRole("Vet")))
 			            {
 				            <li class="nav-item">
 					            <a class="nav-link text-dark" asp-area="VeterinaryRecords" asp-page="/Index">Veterinary Records</a>
 				            </li>
 			            }
-			            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+			            @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker")))
 			            {
 				            <li class="nav-item">
 					            <a class="nav-link text-dark" asp-area="Users" asp-page="/Index">Users</a>
@@ -48,7 +51,7 @@
 
 	            @if (User.Identity.IsAuthenticated)
 	            {
-		            <span style="font-weight: bold">@User.Identity.Name</span>
+					<a class="nav-link text-dark" asp-area="Users" asp-page="/Edit" asp-route-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)" style="font-weight: bold">@User.Identity.Name</a>
 		            <span> (</span>
 		            @if (User.IsInRole("Admin"))
 		            {
@@ -92,9 +95,7 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - iis - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+        
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

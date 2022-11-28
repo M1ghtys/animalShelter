@@ -1,84 +1,221 @@
 ﻿@page
+@using System.Security.Claims
 @model iis.Pages.Walks.IndexModel
 
 @{
     ViewData["Title"] = "Walks";
 }
 
-<div class=row>
-	<div class=col-sm-8>
-		<h1>List of walks</h1>
-	</div>
-    @if (User.Identity.IsAuthenticated && !User.IsInRole("UnverifiedUser"))
-    {
-	    <div class=col-sm-4 align=right>
-		    <p>
-			    <form method="post">
-				    @Html.AntiForgeryToken()
-				    <button type="submit" asp-page-handler="Create">Create New</button>
-			    </form>
-		    </p>
+<form method="post">
+    <div class=row>
+	    <div class=col-sm-8>
+		    <h1>List of walks</h1>
 	    </div>
-    }
-</div>
+        @if (User.Identity.IsAuthenticated && User.IsInRole("Caretaker"))
+        {
+	        <div class=col-sm-4 align=right>
+		        @Html.AntiForgeryToken()
+				<button type="submit" asp-page-handler="Create">Create New</button>
+	        </div>
+        }
 
-<table class="table">
-    <thead>
+        <div class="form-group row" style="float:left">
+            <label for="search" class="col-sm-auto col-lg-auto col-form-label font-weight-bold">Search Animal Name</label>
+            <input class="form-control" id="search" style="width:40%" />
+
+        </div>
+    </div>
+</form>
+
+<div id="data">
+<table class="table mt-4">
+    <thead class="table-dark">
         <tr>
-            <th>
+            <th scope="col" id="animalname" class="btn-primary">
                 Animal Name
             </th>
             <th>
+                Verified
+            </th>
+            <th scope="col" id="username" class="btn-primary">
                 Volunteer Name
             </th>
-            <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.StartTimeSort">
-                    @Html.DisplayNameFor(model => model.Walks[0].StartTime)
-                </a>
+            <th scope="col" id="stime" class="btn-primary">
+                @Html.DisplayNameFor(model => model.Walks[0].StartTime)
             </th>
-            <th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.Walks[0].FinishTime)
             </th>
-            <th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.Walks[0].State)
             </th>
-            <th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.Walks[0].Comment)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Walks)
-        {
-        <tr>
-            <td>
-                    @Html.DisplayFor(modelItem => item.Animal.Name)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.User.Name)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.StartTime)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.FinishTime)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.State)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-	        <td>
-		        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker")))
-		        {
-			        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
-			        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-		        }
-		        <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
-	        </td>
-        </tr>
-}
+    @for (int i = 0; i < Model.Walks.Count; i++)
+    {
+	    @if (User.Identity.IsAuthenticated &&
+	         ((!User.IsInRole("VerifiedUser") && !User.IsInRole("Vet")) ||
+	          (User.IsInRole("VerifiedUser") || User.IsInRole("Vet")) && 
+              ((Model.Walks[i].UserId.ToString() == @HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)) || Model.Walks[i].UserId == Guid.Empty)))
+	    {
+            if (Model.Walks[i].State.ToString() != "Finished") {
+		    <tr>
+			    <td>
+				    @Html.DisplayFor(modelItem => Model.Walks[i].Animal.Name)
+			    </td>
+                <td>
+                    @(Model.Walks[i].IsVerified ? "Verified" : "Not Verified")
+                </td>
+                <td>
+                    @if (Model.Walks[i].UserId == Guid.Empty)
+                    {
+                        <form method="post">
+                            <button type="submit" asp-page-handler="Reserve" asp-route-walkId="@Model.Walks[i].Id">Reserve Walk</button>
+                        </form>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => Model.Walks[i].User.Name)
+                        if (User.IsInRole("Caretaker") && Model.Walks[i].IsVerified == false)
+                        {
+                        <form method="post">
+                            <button type="submit" asp-page-handler="Verify" asp-route-walkId="@Model.Walks[i].Id">Verify</button>
+                        </form>
+                        }
+                    }
+                </td>
+			    <td>
+				    @Html.DisplayFor(modelItem => Model.Walks[i].StartTime)
+			    </td>
+			    <td>
+				    @Html.DisplayFor(modelItem => Model.Walks[i].FinishTime)
+			    </td>
+			    <td>
+				    @Html.DisplayFor(modelItem => Model.Walks[i].State)
+			    </td>
+			    <td>
+				    @Html.DisplayFor(modelItem => Model.Walks[i].Comment)
+			    </td>
+			    <td>
+				    @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker")))
+				    {
+					    <a asp-page="./Edit" asp-route-id="@Model.Walks[i].Id">Edit</a>
+				    }
+				    <a asp-page="./Delete" asp-route-id="@Model.Walks[i].Id">Delete</a>
+				    <a asp-page="./Details" asp-route-id="@Model.Walks[i].Id">Details</a>
+			    </td>
+		    </tr>
+            }
+        }
+	}
     </tbody>
 </table>
+</div>
+
+@if (User.IsInRole("VerifiedUser") || User.IsInRole("Vet")) 
+{
+    <h2>History of Walks</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Animal Name
+                    </th>
+                    <th>
+                        Volunteer Name
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Walks[0].StartTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Walks[0].FinishTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Walks[0].State)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Walks[0].Comment)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Walks.Count; i++)
+                {
+                    @if (User.Identity.IsAuthenticated &&
+                        ((!User.IsInRole("VerifiedUser") && !User.IsInRole("Vet")) ||
+                        (User.IsInRole("VerifiedUser") || User.IsInRole("Vet")) && 
+                        ((Model.Walks[i].UserId.ToString() == @HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)) || Model.Walks[i].UserId == Guid.Empty)))
+                    {
+                        if (Model.Walks[i].State.ToString() == "Finished")
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => Model.Walks[i].Animal.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => Model.Walks[i].User.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => Model.Walks[i].StartTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => Model.Walks[i].FinishTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => Model.Walks[i].State)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => Model.Walks[i].Comment)
+                                </td>
+                                <td>
+                                    @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker")))
+                                    {
+                                        <a asp-page="./Edit" asp-route-id="@Model.Walks[i].Id">Edit</a>
+                                    }
+                                    <a asp-page="./Delete" asp-route-id="@Model.Walks[i].Id">Delete</a>
+                                    <a asp-page="./Details" asp-route-id="@Model.Walks[i].Id">Details</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var order = 0;
+        var selectedDelete = 0;
+
+        const updateFlags = function () {
+            window.history.pushState('Users', '', '?search=' + document.getElementById('search').value + "&order=" + order);
+            $('#data').load(location.href + " #data");
+        };
+
+        $('#search').on('input', updateFlags);
+
+        $(document).on('click', '#username', () => {
+            order = order == 1 ? -1 : 1;
+            updateFlags();
+        });
+
+        $(document).on('click', '#stime', () => {
+            order = order == 2 ? -2 : 2;
+            updateFlags();
+        });
+
+        $(document).on('click', '#animalname', () => {
+            order = order == 3 ? -3 : 3 ;
+            updateFlags();
+        });
+
+    </script>
+}

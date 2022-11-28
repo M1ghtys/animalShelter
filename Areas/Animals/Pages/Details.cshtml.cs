@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using iis.Data;
 using iis.Models;
 using iis.Facades;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace iis.Pages.Animals
 {
@@ -33,6 +35,7 @@ namespace iis.Pages.Animals
 
             Animal = await _context.Animal.FirstOrDefaultAsync(m => m.Id == id);
             Animal.Photos = _context.Photo.Where(m => m.AnimalId == Animal.Id).ToList();
+            Animal.VeterinaryRecords = _context.VeterinaryRecord.Where(m => m.AnimalId == Animal.Id).ToList();
 
             if (Animal == null)
             {

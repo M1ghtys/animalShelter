@@ -9,9 +9,12 @@ using iis.Data;
 using iis.Models;
 using iis.Facades;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace iis.Pages.Users
 {
+    [Authorize(Roles = "Admin")]
     public class DetailsModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
@@ -34,7 +37,7 @@ namespace iis.Pages.Users
             }
             
             User = await _context.Users.FirstOrDefaultAsync(m => m.Id == id.ToString());
-            Role = await _facade.GetUserRoleAsync(id);
+            Role = await _facade.GetUserRoleAsync(id.ToString());
             
             if (User == null)
             {

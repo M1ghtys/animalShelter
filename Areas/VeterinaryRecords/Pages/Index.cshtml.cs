@@ -11,8 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace iis.Pages.VeterinaryRecords
 {
-    //TODO set again
-    //[Authorize(Policy = "RequireCaretakerRole")]
+    [Authorize(Roles = "Admin,Vet,Caretaker")]
     public class IndexModel : PageModel
     {
         private readonly iis.Data.DbContext _context;
@@ -22,37 +21,53 @@ namespace iis.Pages.VeterinaryRecords
             _context = context;
         }
 
-        public string AnimalIDSort { get; set; }
+        public string AnimalNameSort { get; set; }
         public string DateSort { get; set; }
+        public string CurrentFilter { get; set; }
 
         public IList<VeterinaryRecord> VeterinaryRecords { get; set; }
 
-        public async Task OnGetAsync(string sortOrder)
+        public async Task<IActionResult> OnGetAsync(int? order, string search)
         {
-            // using System;
-            AnimalIDSort = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
-            DateSort = sortOrder == "Date" ? "Date_desc" : "Date";
+            int orderBy = order.HasValue ? order.Value : 0;
 
-            IQueryable<VeterinaryRecord> VetRecOrder = from s in _context.VeterinaryRecord
-                                         select s;
+            string searchParams = search == null ? string.Empty : search.ToLower();
 
-            switch (sortOrder)
+            return await LoadData(orderBy, searchParams);
+        }
+
+        private async Task<IActionResult> LoadData(int order, string search)
+        {
+            var veterinaryRecords = _context.VeterinaryRecord.ToList();
+
+            foreach (var v in veterinaryRecords)
             {
-                case "id_desc":
-                    VetRecOrder = VetRecOrder.OrderByDescending(s => s.AnimalId);
+                v.Animal = await _context.Animal.FirstOrDefaultAsync(a => a.Id == v.AnimalId);
+            }
+
+            veterinaryRecords = veterinaryRecords.Where(v => v.Animal.Name.ToLower().Contains(search)).ToList();
+
+
+            switch (order)
+            {
+                case 1:
+                    VeterinaryRecords = veterinaryRecords.OrderBy(n => n.Animal.Name).ToArray();
                     break;
-                case "Date":
-                    VetRecOrder = VetRecOrder.OrderBy(s => s.Date);
+                case 2:
+                    VeterinaryRecords = veterinaryRecords.OrderBy(n => n.Date).ToArray();
                     break;
-                case "Date_desc":
-                    VetRecOrder = VetRecOrder.OrderByDescending(s => s.Date);
+                case -2:
+                    VeterinaryRecords = veterinaryRecords.OrderByDescending(n => n.Date).ToArray();
+                    break;
+                case -1:
+                    VeterinaryRecords = veterinaryRecords.OrderByDescending(n => n.Animal.Name).ToArray();
                     break;
                 default:
-                    VetRecOrder = VetRecOrder.OrderBy(s => s.AnimalId);
+                    VeterinaryRecords = veterinaryRecords.ToArray();
                     break;
             }
 
-            VeterinaryRecords = await VetRecOrder.AsNoTracking().ToListAsync();
+            return Page();
         }
         public IActionResult OnPostCreate()
         {

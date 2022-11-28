@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using iis.Data;
 
 namespace iis.Migrations.SqliteIISDb
 {
     [DbContext(typeof(SqliteIISDbContext))]
-    partial class SqliteIISDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221127145438_removedRole")]
+    partial class removedRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -334,9 +336,6 @@ namespace iis.Migrations.SqliteIISDb
 
                     b.Property<DateTime>("FinishTime")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("TEXT");

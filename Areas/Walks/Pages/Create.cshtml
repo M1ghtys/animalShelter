@@ -1,15 +1,34 @@
 ﻿@page
+@using System.Security.Claims
+@using iis.Data
 @model iis.Pages.Walks.CreateModel
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+            lDate.value = "@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")";
+            gDate.value = "@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")";
+
+            $('#userSelect').change(function () {
+                document.getElementById("userInput").value = $(this).val();
+            })
+
+            function validate() {
+                var lesser = document.getElementById("lDate");
+                var greater = document.getElementById("gDate");
+
+                if (lesser.value > greater.value) {
+                    alert("Start Time should not begin after Finish Time");
+                    lesser.value = greater.value;
+                }
+            }
+    </script>
 }
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h2>Create Walk</h2>
 
-<h4>Walk</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -17,30 +36,52 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Walk.Id" />
             <div class="form-group">
-                <label asp-for="Walk.AnimalId" class="control-label">Animal</label>
-                <select asp-for="Walk.AnimalId" asp-items="@(new SelectList(Model.Animals, nameof(Animal.Id), nameof(Animal.Name)))" class="form-control"></select>
-                <span asp-validation-for="Walk.AnimalId" class="text-danger"></span>
+	            <label asp-for="Walk.AnimalId" class="control-label">Animal</label>
+	            <select asp-for="Walk.AnimalId" asp-items="@(new SelectList(Model.Animals, nameof(Animal.Id), nameof(Animal.Name)))" class="form-control"></select>
+	            <span asp-validation-for="Walk.AnimalId" class="text-danger"></span>
+            </div>
+            @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker")))
+            {
+	            <div class="form-group">
+		            <label for="userSelect" class="control-label">User</label>
+		            
+                <select id="userSelect" class="form-control">
+                    <option>None</option>
+                    @foreach (var user in Model.Users)
+                    {
+                        <option>@user.UserName</option>
+                    }
+                </select>
+                <input style="visibility:collapse" asp-for="SelectUser" id="userInput"/>
+	            </div>
+            }
+            else
+            {
+                <input type="hidden" asp-for="Walk.UserId" value="@HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+            }
+            <div class="form-group">
+	            <label asp-for="Walk.StartTime" class="control-label">Start Time</label>
+	            <input asp-for="Walk.StartTime" class="form-control" id="lDate" onfocusout="validate();"/>
+	            <span asp-validation-for="Walk.StartTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-	            <label asp-for="Walk.UserId" class="control-label">User</label>
-                <select asp-for="Walk.UserId" asp-items="@(new SelectList(Model.Users, nameof(iis.Models.User.Id), nameof(iis.Models.User.UserName)))" class="form-control"></select>
-	            <span asp-validation-for="Walk.UserId" class="text-danger"></span>
+	            <label asp-for="Walk.FinishTime" class="control-label">Finish Time</label>
+	            <input asp-for="Walk.FinishTime" class="form-control" id="gDate" onfocusout="validate();"/>
+	            <span asp-validation-for="Walk.FinishTime" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Walk.StartTime" class="control-label"></label>
-                <input asp-for="Walk.StartTime" class="form-control" />
-                <span asp-validation-for="Walk.StartTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Walk.FinishTime" class="control-label"></label>
-                <input asp-for="Walk.FinishTime" class="form-control" />
-                <span asp-validation-for="Walk.FinishTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Walk.State" class="control-label"></label>
-                <select asp-for="Walk.State" asp-items="Html.GetEnumSelectList<WalkState>()" class="form-control"></select>
-                <span asp-validation-for="Walk.State" class="text-danger"></span>
-            </div>
+            @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Caretaker")))
+            {
+	            <div class="form-group">
+	                <label asp-for="Walk.State" class="control-label"></label>
+	                <select asp-for="Walk.State" asp-items="Html.GetEnumSelectList<WalkState>()" class="form-control"></select>
+		            <span asp-validation-for="Walk.State" class="text-danger"></span>
+		        </div>
+            }
+            else
+            {
+                <input type="hidden" asp-for="Walk.State" value="@WalkState.NotStarted" />
+            }
+            
             <div class="form-group">
                 <label asp-for="Walk.Comment" class="control-label"></label>
                 <input asp-for="Walk.Comment" class="form-control" />

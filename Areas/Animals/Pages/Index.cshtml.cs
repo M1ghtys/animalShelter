@@ -18,40 +18,40 @@ namespace iis.Pages.Animals
         public IndexModel(iis.Data.DbContext context)
         {
             _context = context;
+            currentReservedChecked = false;
         }
 
-        public IList<Animal> Animals { get;set; }
+        public IList<Animal> Animals { get; set; }
 
         public string BirthSort { get; set; }
         public string DateOASort { get; set; }
+        public string CurrentFilter { get; set; }
+        public string CurrentFilterV { get; set; }
+        public bool currentReservedChecked { get; set; }
+        public bool currentReservedNotChecked { get; set; }
 
-        public async Task OnGetAsync(string sortOrder)
+        public async Task<IActionResult> OnGetAsync(string search, int? order, int? reserved)
         {
 
-            BirthSort = String.IsNullOrEmpty(sortOrder) ? "birth_desc" : "";
-            DateOASort = sortOrder == "DateOA" ? "DateOA_desc" : "DateOA";
+            int orderBy = order.HasValue ? order.Value : 0;
+            int reservedVal = reserved.HasValue ? reserved.Value : 0;
 
-            IQueryable<Animal> AnimalRecord = from s in _context.Animal
-                                                       select s;
+            string searchParams = search == null ? string.Empty : search.ToLower();
 
-            switch (sortOrder)
-            {
-                case "birth_desc":
-                    AnimalRecord = AnimalRecord.OrderByDescending(s => s.Birth);
-                    break;
-                case "DateOA":
-                    AnimalRecord = AnimalRecord.OrderBy(s => s.DateOfArrival);
-                    break;
-                case "DateOA_desc":
-                    AnimalRecord = AnimalRecord.OrderByDescending(s => s.DateOfArrival);
-                    break;
-                default:
-                    AnimalRecord = AnimalRecord.OrderBy(s => s.Id);
-                    break;
-            }
+            return await LoadData(searchParams, orderBy, reservedVal);
+        }
 
-            Animals = await AnimalRecord.AsNoTracking().ToListAsync();
-            foreach (var a in Animals)
+        public IActionResult OnPostCreate()
+        {
+            return RedirectToPage("Create");
+        }
+
+        public async Task<IActionResult> LoadData(string search, int order, int reserved)
+        {
+            IList<Animal> AnimalRecord = _context.Animal.ToList();
+            
+
+            foreach (var a in AnimalRecord)
             {
                 a.Photos = _context.Photo.Where(p => p.AnimalId == a.Id).ToList();
                 if (!a.Photos.Any())
@@ -63,11 +63,39 @@ namespace iis.Pages.Animals
                     });
                 }
             }
-        }
 
-        public IActionResult OnPostCreate()
-        {
-            return RedirectToPage("Create");
+            AnimalRecord = AnimalRecord
+                .Where(a => a.Breed.ToLower().Contains(search))
+                .ToList();
+
+            switch (order)
+            {
+                case 1:
+                    Animals = AnimalRecord.OrderBy(s => s.Birth).ToList();
+                    break;
+                case 2:
+                    Animals = AnimalRecord.OrderBy(s => s.DateOfArrival).ToList();
+                    break;
+                case -1:
+                    Animals = AnimalRecord.OrderByDescending(s => s.Birth).ToList();
+                    break;
+                case -2:
+                    Animals = AnimalRecord.OrderByDescending(s => s.DateOfArrival).ToList();
+                    break;
+                default:
+                    Animals = AnimalRecord.OrderBy(s => s.Id).ToList();
+                    break;
+            }
+
+            if(reserved == 1)
+            {
+                Animals = Animals.Where(a => a.Reserved).ToList();
+            }else if (reserved == -1)
+            {
+                Animals = Animals.Where(a => !a.Reserved).ToList();
+            }
+
+            return Page();
         }
     }
 }
