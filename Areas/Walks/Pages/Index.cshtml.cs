@@ -27,7 +27,7 @@ namespace iis.Pages.Walks
         public string StateSort { get; set; }
         public string CurrentFilter { get; set; }
         public string CurrentFilterV { get; set; }
-        public IList<Walk> Walks { get;set; }
+        public List<Walk> Walks { get;set; }
 
         public async Task<IActionResult> OnGetAsync(int? order, string search)
         {
@@ -53,25 +53,27 @@ namespace iis.Pages.Walks
             switch (order)
             {
                 case 1:
-                    Walks = walks.OrderBy(n => n.User.Name).ToArray();
+                    Walks = walks.Where(n => n.User == null).ToList();
+                    Walks.AddRange(walks.Where(n => n.User != null).OrderBy(n => n.User.Name).ToList());
                     break;
                 case -1:
-                    Walks = walks.OrderByDescending(n => n.User.Name).ToArray();
+                    Walks = walks.Where(n => n.User != null).OrderByDescending(n => n.User.Name).ToList();
+                    Walks.AddRange(walks.Where(n => n.User == null).ToList());
                     break;
                 case 2:
-                    Walks = walks.OrderBy(n => n.StartTime).ToArray();
+                    Walks = walks.OrderBy(n => n.StartTime).ToList();
                     break;
                 case -2:
-                    Walks = walks.OrderByDescending(n => n.StartTime).ToArray();
+                    Walks = walks.OrderByDescending(n => n.StartTime).ToList();
                     break;
                 case 3:
-                    Walks = walks.OrderBy(n => n.Animal.Name).ToArray();
+                    Walks = walks.OrderBy(n => n.Animal.Name).ToList();
                     break;
                 case -3:
-                    Walks = walks.OrderByDescending(n => n.Animal.Name).ToArray();
+                    Walks = walks.OrderByDescending(n => n.Animal.Name).ToList();
                     break;
                 default:
-                    Walks = walks.ToArray();
+                    Walks = walks.ToList();
                     break;
             }
 
