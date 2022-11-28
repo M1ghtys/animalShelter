@@ -31,6 +31,8 @@ namespace iis.Pages.VeterinaryRecords
 
         [BindProperty]
         public IList<Animal> Animals { get; set; }
+        [BindProperty]
+        public Guid AnimalId { get;set; }
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
@@ -41,6 +43,7 @@ namespace iis.Pages.VeterinaryRecords
             }
 
             VeterinaryRecord = await _context.VeterinaryRecord.FirstOrDefaultAsync(m => m.Id == id);
+            AnimalId = VeterinaryRecord.AnimalId;
 
             if (VeterinaryRecord == null)
             {
@@ -58,6 +61,7 @@ namespace iis.Pages.VeterinaryRecords
                 return Page();
             }
 
+            VeterinaryRecord.AnimalId = AnimalId;
             _context.Attach(VeterinaryRecord).State = EntityState.Modified;
 
             try
