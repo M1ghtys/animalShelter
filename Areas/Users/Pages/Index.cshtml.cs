@@ -28,6 +28,8 @@ namespace iis.Pages.Users
         
         public IList<User> Users { get;set; }
         public List<string> Roles { get; set; } = new List<string>();
+        [BindProperty]
+        public string SelectRole { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? order, string search)
         {
@@ -109,6 +111,32 @@ namespace iis.Pages.Users
             }
 
             return RedirectToPage("Index");
+        }
+        public async Task<IActionResult> OnPostChangeRole(string userId)
+        {
+            if (User.IsInRole("Admin"))
+            {
+                var userForRole = await _userManager.FindByIdAsync(userId);
+
+                var roles = await _userManager.GetRolesAsync(userForRole);
+
+                if (roles.FirstOrDefault() != SelectRole.ToString())
+                {
+                    var result = await _userManager.RemoveFromRolesAsync(userForRole, roles);
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError("", "Cannot remove user roles");
+                        return Page();
+                    }
+                    result = await _userManager.AddToRoleAsync(userForRole, SelectRole.ToString());
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError("", "Cannot add roles to user");
+                        return Page();
+                    }
+                }
+            }
+            return RedirectToPage("Index", new { area = "Users" });
         }
     }
 }

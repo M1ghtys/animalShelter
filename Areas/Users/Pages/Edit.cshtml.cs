@@ -93,29 +93,10 @@ namespace iis.Pages.Users
 
             var savingResult = await _context.SaveChangesAsync();
 
-            if (savingResult == 0)
+            if(savingResult == 0)
             {
                 ModelState.AddModelError("", "No Change Was Made");
                 return Page();
-            }
-
-            
-            var roles = await _userManager.GetRolesAsync(user);
-
-            if (roles.FirstOrDefault() != Role.ToString())
-            {
-                var result = await _userManager.RemoveFromRolesAsync(user, roles);
-                if (!result.Succeeded)
-                {
-                    ModelState.AddModelError("", "Cannot remove user roles");
-                    return Page();
-                }
-                result = await _userManager.AddToRoleAsync(user, Role.ToString());
-                if (!result.Succeeded)
-                {
-                    ModelState.AddModelError("", "Cannot add roles to user");
-                    return Page();
-                }
             }
 
             return RedirectToPage("Index", new { area = "Users" });
