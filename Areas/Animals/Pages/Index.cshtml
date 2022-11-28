@@ -24,19 +24,33 @@
 </div>
 
 <form asp-page="./Index" method="get">
-    <div class="form-actions">
-        <p>
-            Find by species:
-            <input id="search" type="text" name="SearchString" value="@Model.CurrentFilter" />
-            reserved|not reserved:
-            <input id="search" type="text" name="SearchString" value="@Model.CurrentFilter" />
-            <input type="submit" value="Search" class="btn btn-primary" /> |
-            <a asp-page="./Index">Back to full List</a>
-        </p>
+    <div class="form-actions mt-3">
+            <dl class="row">
+                <dt class="col-sm-2">
+                    Find by species:
+                </dt>
+                <dd class="col-sm-10">
+                    <input id="search" type="text" name="SearchString" value="@Model.CurrentFilter" />
+                </dd>
+                <dt class="col-sm-2">
+                    reserved
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.CheckBoxFor(m => m.currentReservedChecked)
+                </dd>
+                <dt class="col-sm-2">
+                    not reserved
+                </dt>
+                <dd class="col-sm-10">
+                    <input id="search" type="checkbox" asp-for="@Model.currentReservedNotChecked" />
+                </dd>
+            </dl>
+        <input type="submit" value="Search" class="btn btn-primary" /> |
+        <a asp-page="./Index">Back to full List</a>
     </div>
 </form>
 
-<table class="table">
+<table class="table mt-4">
     <thead>
     <tr>
         <th></th>

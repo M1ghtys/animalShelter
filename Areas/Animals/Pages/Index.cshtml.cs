@@ -18,6 +18,7 @@ namespace iis.Pages.Animals
         public IndexModel(iis.Data.DbContext context)
         {
             _context = context;
+            currentReservedChecked = false;
         }
 
         public IList<Animal> Animals { get;set; }
@@ -26,6 +27,8 @@ namespace iis.Pages.Animals
         public string DateOASort { get; set; }
         public string CurrentFilter { get; set; }
         public string CurrentFilterV { get; set; }
+        public bool currentReservedChecked { get; set; }
+        public bool currentReservedNotChecked { get; set; }
 
         public async Task OnGetAsync(string sortOrder, string searchString, string searchStringV)
         {
@@ -57,17 +60,11 @@ namespace iis.Pages.Animals
                 AnimalRecord = AnimalRecord.Where(s => s.Breed.Contains(searchString)).ToList();
             }
 
-            if (!String.IsNullOrEmpty(searchStringV))
+            if (currentReservedChecked)
             {
-                if(searchStringV == "reserved")
-                {
-                    AnimalRecord = AnimalRecord.Where(s => s.Reserved).ToList();
-                } else if(searchStringV == "not reserved")
-                {
-                    AnimalRecord = AnimalRecord.Where(s => !s.Reserved).ToList();
-                }
-                
+                AnimalRecord = AnimalRecord.Where(s => s.Reserved).ToList();
             }
+
 
             switch (sortOrder)
             {
