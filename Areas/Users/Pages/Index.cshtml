@@ -14,8 +14,8 @@
 
             @if (User.IsInRole("Admin"))
             {
-            @Html.AntiForgeryToken()
-            <button type="submit" asp-page-handler="Create">Create New</button>
+                @Html.AntiForgeryToken()
+                <button type="submit" asp-page-handler="Create">Create New</button>
             }
         </div>
     </div>
@@ -79,6 +79,11 @@
                     <td>
                         @if (User.IsInRole("Admin"))
                         {
+                            <input class="btn btn-primary" type="button" onclick="roles(@i);" value="Change Role" />
+                            <form method="post">
+                                <input class="collapse" type="text" id="role_@i" asp-for="SelectRole" />
+                                <input class="collapse" type="submit" id="roleSubmit_@i" asp-page-handler="ChangeRole" asp-route-userId="@Model.Users[i].Id" />
+                            </form>
                             <a asp-page="./Edit" asp-route-id="@Model.Users[i].Id">Edit</a>
                             <a asp-page="./Delete" asp-route-id="@Model.Users[i].Id">Delete</a>
                             <a asp-page="./Details" asp-route-id="@Model.Users[i].Id">Details</a>
@@ -97,12 +102,35 @@
         </tbody>
     </table>
 </div>
+<div id="modals">
+    <div id="roleDialog" title="Role Change">
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <div class="form-group">
+                        <label for="roleSelect" class="control-label"></label>
+                        <select id="roleSelect" class="form-control">
+                            <option>Admin</option>
+                            <option>Caretaker</option>
+                            <option>Vet</option>
+                            <option>VerifiedUser</option>
+                            <option>UnverifiedUser</option>
+                        </select>
 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script>
         var order = 0;
         var selectedDelete = 0;
+        var handledRole = -1;
 
         const updateFlags = function () {
             window.history.pushState('Users', '', '?search=' + document.getElementById('search').value + "&order=" + order);
@@ -120,6 +148,31 @@
             order = order == 2 ? -2 : 2;
             updateFlags();
         });
+        function roles(val) {
+            handledRole = val;
+            $("#roleDialog").dialog("open");
+            return false;
+        }
+        $(function () {
+            $("#roleDialog").dialog({
+                autoOpen: false,
+                resizable: false,
+                height: "auto",
+                width: 450,
+                modal: true,
+                buttons: {
+                    "Change": function () {
 
+                        document.getElementById("role_" + handledRole).value = document.getElementById("roleSelect").value;
+                        document.getElementById("roleSubmit_" + handledRole).click();
+                        $(this).dialog("close");
+                    },
+                    "Cancel": function () {
+                        handledRole = -1;
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        });
     </script>
 }

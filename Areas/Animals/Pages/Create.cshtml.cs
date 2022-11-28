@@ -41,6 +41,16 @@ namespace iis.Pages.Animals
                 return Page();
             }
 
+            if(_context.Animal.Where(x => x.ChipNumber == Animal.ChipNumber).FirstOrDefault() != null)
+            {
+                ModelState.AddModelError("", "Chip Number Already Exists");
+                return Page();
+            }
+
+            _context.Animal.Add(Animal);
+
+            await _context.SaveChangesAsync();
+
             if (Photo != null)
             {
                 _context.Photo.Add(new Photo()
@@ -48,11 +58,8 @@ namespace iis.Pages.Animals
                     AnimalId = Animal.Id,
                     Source = Photo
                 });
+                await _context.SaveChangesAsync();
             }
-
-            _context.Animal.Add(Animal);
-
-            await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

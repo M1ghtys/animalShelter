@@ -60,14 +60,6 @@
                     <input style="width:16%;" class="form-control" type="tel"  required asp-for="PhoneNumber" />
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
-                @if (@Model.UserModel.Id != @HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier))
-                {
-                    <div class="form-group">
-                        <label asp-for="Role" class="control-label"></label>
-                        <select asp-for="Role" asp-items="Html.GetEnumSelectList<Role>()" style="width:16%;" class="form-control"></select>
-                        <span asp-validation-for="Role" class="text-danger"></span>
-                    </div>
-                }
             </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
