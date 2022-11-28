@@ -21,7 +21,7 @@ namespace iis.Pages.Animals
             currentReservedChecked = false;
         }
 
-        public IList<Animal> Animals { get;set; }
+        public IList<Animal> Animals { get; set; }
 
         public string BirthSort { get; set; }
         public string DateOASort { get; set; }
@@ -30,19 +30,28 @@ namespace iis.Pages.Animals
         public bool currentReservedChecked { get; set; }
         public bool currentReservedNotChecked { get; set; }
 
-        public async Task OnGetAsync(string sortOrder, string searchString, string searchStringV)
+        public async Task<IActionResult> OnGetAsync(string search, int? order, int? reserved)
         {
 
-            BirthSort = String.IsNullOrEmpty(sortOrder) ? "birth_desc" : "";
-            DateOASort = sortOrder == "DateOA" ? "DateOA_desc" : "DateOA";
+            int orderBy = order.HasValue ? order.Value : 0;
+            int reservedVal = reserved.HasValue ? reserved.Value : 0;
 
-            CurrentFilter = searchString;
-            CurrentFilterV = searchStringV;
+            string searchParams = search == null ? string.Empty : search.ToLower();
 
+            return await LoadData(searchParams, orderBy, reservedVal);
+        }
+
+        public IActionResult OnPostCreate()
+        {
+            return RedirectToPage("Create");
+        }
+
+        public async Task<IActionResult> LoadData(string search, int order, int reserved)
+        {
             IList<Animal> AnimalRecord = _context.Animal.ToList();
-            Animals = AnimalRecord;
+            
 
-            foreach (var a in Animals)
+            foreach (var a in AnimalRecord)
             {
                 a.Photos = _context.Photo.Where(p => p.AnimalId == a.Id).ToList();
                 if (!a.Photos.Any())
@@ -55,26 +64,22 @@ namespace iis.Pages.Animals
                 }
             }
 
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                AnimalRecord = AnimalRecord.Where(s => s.Breed.Contains(searchString)).ToList();
-            }
+            AnimalRecord = AnimalRecord
+                .Where(a => a.Breed.ToLower().Contains(search))
+                .ToList();
 
-            if (currentReservedChecked)
+            switch (order)
             {
-                AnimalRecord = AnimalRecord.Where(s => s.Reserved).ToList();
-            }
-
-
-            switch (sortOrder)
-            {
-                case "birth_desc":
-                    Animals = AnimalRecord.OrderByDescending(s => s.Birth).ToList();
+                case 1:
+                    Animals = AnimalRecord.OrderBy(s => s.Birth).ToList();
                     break;
-                case "DateOA":
+                case 2:
                     Animals = AnimalRecord.OrderBy(s => s.DateOfArrival).ToList();
                     break;
-                case "DateOA_desc":
+                case -1:
+                    Animals = AnimalRecord.OrderByDescending(s => s.Birth).ToList();
+                    break;
+                case -2:
                     Animals = AnimalRecord.OrderByDescending(s => s.DateOfArrival).ToList();
                     break;
                 default:
@@ -82,11 +87,15 @@ namespace iis.Pages.Animals
                     break;
             }
 
-        }
+            if(reserved == 1)
+            {
+                Animals = Animals.Where(a => a.Reserved).ToList();
+            }else if (reserved == -1)
+            {
+                Animals = Animals.Where(a => !a.Reserved).ToList();
+            }
 
-        public IActionResult OnPostCreate()
-        {
-            return RedirectToPage("Create");
+            return Page();
         }
     }
 }
