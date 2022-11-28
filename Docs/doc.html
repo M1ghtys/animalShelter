@@ -25,11 +25,11 @@
 	</dd>
 	<dd>Daniel Prudký 
         <a href="mailto:xprudk08@stud.fit.vutbr.cz">xprudk08@stud.fit.vutbr.cz</a> - 
-		Práce na stránkách aplikace + nastavení databáze + práce s rolemi a autentizací
+		Práce na stránkách aplikace + fuknční vrstva databáze + práce s rolemi a autentizací
 	</dd>
   <dd>Jakub Sychra 
     <a href="mailto:xsychr06@stud.fit.vutbr.cz">xsychr06@stud.fit.vutbr.cz</a> - 
-		Práce na stránkách aplikace + instalace na server + nastavení cookies atd.
+		Práce na stránkách aplikace + konfigurace databáze + instalace na server + nastavení cookies atd.
 	</dd>
 	<dt>URL aplikace</dt>
 	<dd>Stránky - <a href="http://51.103.219.55/">http://51.103.219.55/</a></dd>
@@ -49,8 +49,14 @@
 <h3>Připojení do pgAdmin</h3>
 <table>
 <tr><th>Email</th><th>Heslo</th></tr>
-<tr><td>admin@iis.com</td><td>root</td></tr>
+<tr><td>admin@iis.com</td><td>34rrf#w51qDk</td></tr>
 </table>
+<h3>Připojení Postgres</h3>
+<table>
+<tr><th>Uživatelské jméno</th><th>Heslo</th></tr>
+<tr><td>root</td><td>FYnsIy05a8#*</td></tr>
+</table>
+
 
 <p style="color:green">(Diagram případů užití není nutné vkládat, pokud IS implementuje role a případy užití definované zadáním.)</p> 
 
@@ -61,8 +67,8 @@
 <h2>Implementace</h2>
 <p style="color:green">Stručná dokumentace k implementaci, která popisuje, které části projektu (např. PHP skripty) implementují jednotlivé případy použití.</p>
 
-<p>Projekt jsme se rozhodli implementovat pomocí <span class="dec">ASN.NET Core</span> a jako server jsme využili služeb <span class="dec">Azure</span> a <span class="dec">Docker</span>.
-Základní inicializace probíhá v souboru <span class="dec">Startup.cs</span>, který nastaví připojení k databázy, nastavení cookie, naseedování dat atd.
+<p>Projekt jsme se rozhodli implementovat pomocí <span class="dec">ASP.NET Core</span> a jako server jsme využili služeb <span class="dec">Azure</span> a <span class="dec">Docker</span>.
+Základní inicializace probíhá v souboru <span class="dec">Startup.cs</span>, který nastaví připojení k databázi, nastavení cookies, naseedování dat atd.
 Nastavení databáze je v souboru <span class="dec">/Data/DbContext.cs</span>, kde se nastavují vztahy tabulek a definují se tabulky. Aplikace používá i další tabulky,
 které jsme použili z frameworku <span class="dec">ASP.NET Core Identity</span> a do kterých se ukládají data o uživatelých.
 Přístup k tomuto frameworku je v <span class="dec">/Data/DbContext.cs</span> a <span class="dec">/Models/User.cs</span> pomocí dědění.
@@ -76,17 +82,39 @@ pro lepší práci s databází, autorizací i autentizací.</p>
 <img src="dbERD.jpg" height="500"/>
 
 <h2>Instalace</h2>
-<span style="color:green">
-Stručně popište: 
-<ul>
-<li>postup instalace na server,</li>
-<li>softwarové požadavky (verze PHP apod.),</li>
-<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
+<img src="server.png" height="500"/>
+<p>
+Instalace na server probíhá stáhnutím Docker Image z Dockerového repozitáře, kam je převáděna současná verze repozitáře z GitHub.
+Tato funkce je zabalena v docker-compose, který si můžeme představit jako 'skript' na spouštění více kontejnerových aplikací.
+Tento skript je obsažen pro spuštění aplikace a poté pro spuštění postgres databáze s její administrací.
+</p>
+<p><h2>
+Požadavky:</h2></p>
+<p>
+Powershell (Migrace)</p>
+<p>
+Microsoft.AspNetCore.Mvc.Razor.RuntimeComp</p>
+<p>
+Microsoft.EntityFrameworkCore</p>
+<p>
+Microsoft.EntityFrameworkCore.Sqlite</p>
+<p>
+Npgsql.EntityFrameworkCore.PostgreSQL</p>
+<p>
+System.Linq</p>
+<p>
+Microsoft.AspNetCore.Identity.EntityFrameworkCore</p>
+<p>
+.NET 5</p>
+
+
+<h2>Inicializace:</h2><p>
+Databáze je podobně jako samotný projekt inicializována a spoštěna skriptem.
+Získá nejnovější verzi Docker Image pro PostgreSQL 
+Nakonfiguruje superuživatele, heslo a název databáze (vše obsaženo ve skriptu) a porty a složka pro zálohu, která garantuje persistentní databázi. Podobný proces slouží pro pgAdmin.
+</p>
 </ul>
 </span>
-
-<h2>Známé problémy</h2>
-<p style="color:green">Zde popište, které body zadání nejsou implementovány a z jakého důvodu. Např. &bdquo;Z časových důvodů nebyla implementována správa uživatelů.&rdquo; Pomůžete tím zrychlit hodnocení, když neimplementované funkce nebudeme muset dlouze hledat.</p>
 
 </body>
 </html>
