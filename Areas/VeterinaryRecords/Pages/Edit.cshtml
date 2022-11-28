@@ -16,6 +16,7 @@
             <div class="form-group">
 	            <label asp-for="VeterinaryRecord.AnimalId" class="control-label">Animal</label>
 	            <select disabled asp-for="VeterinaryRecord.AnimalId" asp-items="@(new SelectList(Model.Animals, nameof(Animal.Id), nameof(Animal.Name)))" class="form-control"></select>
+                <input asp-for="AnimalId" class="collapse" />
 	            <span asp-validation-for="VeterinaryRecord.AnimalId" class="text-danger"></span>
             </div>
             <div class="form-group">
