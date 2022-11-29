@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  server:
+    image: mightys/iisrepo:latest
+    environment:
+      - Logging__LogLevel__Default=Information
+      - Logging__LogLevel__Microsoft=Warning
+      - Logging__LogLevel__Microsoft.Hosting.Lifetime
+      - Configuration__Database__DatabaseProvider=PostgreSQL
+      - Configuration__Database__PostgresConnectionString=Host=51.103.219.55;Port=5432;Database=production;Username=root;Password=FYnsIy05a8#*
+    ports:
+      - "80:80"
