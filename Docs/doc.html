@@ -103,9 +103,10 @@ Microsoft.AspNetCore.Identity.EntityFrameworkCore</p>
 
 
 <h2>Inicializace:</h2><p>
-Databáze je podobně jako samotný projekt inicializována a spoštěna skriptem.
+Databáze je podobně jako samotný projekt inicializována a spuštěna skriptem.
 Získá nejnovější verzi Docker Image pro PostgreSQL 
-Nakonfiguruje superuživatele, heslo a název databáze (vše obsaženo ve skriptu) a porty a složka pro zálohu, která garantuje persistentní databázi. Podobný proces slouží pro pgAdmin.
+Nakonfiguruje superuživatele, heslo a název databáze (vše obsaženo ve skriptu) a porty a složka pro zálohu, která garantuje persistentní databázi. Podobný proces slouží pro pgAdmin. Ve složce `./production-database` jsou v korespondujících složkách korespondující skripty které se používají na serveru.
+Tyto skripty se pouštějí příkazem `./docker compose up` a `./docker compose pull`. `up` příkaz spustí docker image a `pull` získá novou verzi image.
 </p>
 </ul>
 </span>
